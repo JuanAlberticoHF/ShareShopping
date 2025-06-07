@@ -1,0 +1,162 @@
+import "package:flutter/material.dart";
+import "package:shareshopping/app/pages/mainPages/widgets/appbar.dart";
+import "package:shareshopping/app/pages/mainPages/widgets/elemento_listados.dart";
+import "package:shareshopping/app/pages/operationPages/papelera_page.dart";
+import "../../../core/services/listados_fb.dart";
+import "../operationPages/addListas_page.dart";
+
+
+class ListasUsuarioPage extends StatefulWidget {
+  const ListasUsuarioPage({super.key});
+
+  @override
+  State<ListasUsuarioPage> createState() => ListasUsuarioPageState();
+}
+
+class ListasUsuarioPageState extends State<ListasUsuarioPage> {
+
+  FireStoreService fireStoreService = FireStoreService();
+  bool _isSearching = false;
+  TextEditingController _searchController = TextEditingController();
+  String _searchText = "";
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: _isSearching
+            ? TextField(
+          controller: _searchController,
+          autofocus: true,
+          decoration: const InputDecoration(
+            hintText: 'Buscar listas...',
+            border: InputBorder.none,
+          ),
+          onChanged: (value) {
+            setState(() {
+              _searchText = value.toLowerCase();
+            });
+          },
+        )
+            : const Text('Mis listas'),
+        actions: [
+          IconButton(
+            icon: Icon(_isSearching ? Icons.close : Icons.search),
+            onPressed: () {
+              setState(() {
+                _isSearching = !_isSearching;
+                if (!_isSearching) {
+                  _searchController.clear();
+                  _searchText = "";
+                }
+              });
+            },
+          ),
+          PopupMenuButton<String>(
+            icon: const Icon(Icons.more_vert, color: Colors.black),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(10),
+            ),
+            color: Colors.white,
+            onSelected: (value) {
+              if (value == 'papelera') {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => PapeleraPage(),
+                  ),
+                );
+              }
+            },
+            itemBuilder: (context) => [
+              PopupMenuItem(
+                value: 'papelera',
+                child: Row(
+                  children: const [
+                    Icon(Icons.delete, color: Colors.red),
+                    Text('Papelera'),
+                  ],
+                ),
+              ),
+            ],
+          )
+        ],
+        backgroundColor: Colors.white70,
+        foregroundColor: Colors.black,
+      ),
+      backgroundColor: Colors.grey[200],
+      floatingActionButton: FloatingActionButton.extended(
+        elevation: 4,
+        backgroundColor: Colors.blue,
+        icon: const Icon(Icons.add, color: Colors.white),
+        label: const Text("Nueva lista", style: TextStyle(color: Colors.white),),
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => AddListasPage(),
+            ),
+          );
+        },
+      ),
+      body: Container(
+        color: Colors.white70,
+        padding: const EdgeInsets.all(5.0),
+        child: StreamBuilder (
+          stream: fireStoreService.getListados(),
+            builder: (context, snapshot) {
+              if (snapshot.hasError) {
+                return Center(
+                  child: Text("Error: ${snapshot.error}"),
+                );
+              }
+
+              if (!snapshot.hasData) {
+                return const Center(
+                  child: CircularProgressIndicator(),
+                );
+              }
+
+              // Listados de Firestore
+              final listados = snapshot.data!.docs;
+
+              // 🔍 Filtrar por búsqueda
+              final listasFiltradas = _searchText.isEmpty
+                  ? listados
+                  : listados.where((listado) {
+                final nombreLista = listado['nombre'].toString().toLowerCase();
+                return nombreLista.contains(_searchText);
+              }).toList();
+
+              return ListView.builder(
+                itemCount: listasFiltradas.length,
+                itemBuilder: (BuildContext context, int index) {
+                  final listado = listasFiltradas[index];
+                  final articulo = listado.get("articulos");
+
+                  // Calcular progreso
+                  int cantidadArticulos = articulo.length;
+                  int articulosMarcados = 0;
+                  for (var art in articulo) {
+                    if (art['check'] == true) articulosMarcados++;
+                  }
+                  final textoProgreso = "$articulosMarcados/$cantidadArticulos";
+                  double valorProgreso = cantidadArticulos > 0 ? articulosMarcados / cantidadArticulos : 0;
+
+                  return ElementosListas(
+                    id: listado.id,
+                    title: listado['nombre'],
+                    progress: valorProgreso,
+                    itemsText: textoProgreso,
+                    onDelete: () {
+                      fireStoreService.deleteListado(listado.id);
+                    },
+                  );
+                },
+              );
+            }
+        )
+      ),
+    );
+  }
+}
