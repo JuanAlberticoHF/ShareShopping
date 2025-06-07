@@ -129,8 +129,8 @@ class PapeleraPageState extends State<PapeleraPage> {
 
                     return ElementosListas(
                       id: listado.id,
-                      title: listado['nombre'],
-                      progress: valorProgreso,
+                      nombre: listado['nombre'],
+                      progreso: valorProgreso,
                       itemsText: textoProgreso,
                       onDelete: () {
                         fireStoreService.deleteListado(listado.id);

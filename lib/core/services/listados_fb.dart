@@ -49,6 +49,14 @@ class FireStoreService {
     await dbListados.doc(id).update(listadoObj);
   }
 
+  Future<void> updateListadoName(String id, String nombre) async {
+    final listadoObj = <String, dynamic>{
+      'nombre': nombre,
+      'fecha_modificacion': Timestamp.fromDate(DateTime.now()),
+    };
+    await dbListados.doc(id).update(listadoObj);
+  }
+
   // updateArticuloCheck():
   Future<void> updateArticuloCheck(String id, int index, bool bool) async {
     // Obtiene el listado por ID
