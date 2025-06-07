@@ -2,23 +2,27 @@ import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:shareshopping/app/pages/operationPages/articulos_listas_page.dart';
 
+import '../../core/services/listados_fb.dart';
 import 'bottonsheet.dart';
+import 'editar_nombre_dialog.dart';
 
 class ElementosListas extends StatelessWidget {
   final String id; // Identificador
-  final String title; // Título
-  final double progress; // Progreso
+  final String nombre; // Título
+  final double progreso; // Progreso
   final String itemsText; // Elementos "X/Y"// Callback para eliminar el elemento
   final VoidCallback? onDelete;
 
-  const ElementosListas({
+  ElementosListas({
     super.key,
     required this.id,
-    required this.title,
-    required this.progress,
+    required this.nombre,
+    required this.progreso,
     required this.itemsText,
     this.onDelete,
   });
+
+  FireStoreService fireStoreService = FireStoreService();
 
   @override
   Widget build(BuildContext context) {
@@ -29,8 +33,8 @@ class ElementosListas extends StatelessWidget {
           MaterialPageRoute(
             builder: (context) => ArticulosListasPage(
                 listaId: id,
-                progress: progress,
-                nombreLista: title,
+                progress: progreso,
+                nombreLista: nombre,
             ),
           ),
         );
@@ -53,7 +57,15 @@ class ElementosListas extends StatelessWidget {
             children: [ // Widgets de acciones (Slidable Actions)
               //-- Accion Editar
               SlidableAction(
-                onPressed: (context) {},
+                onPressed: (context) {
+                  EditarNombreDialog.show(
+                    context,
+                    nombreInicial: nombre,
+                    onSave: (nuevoNombre) {
+                      fireStoreService.updateListadoName(id, nuevoNombre);
+                    },
+                  );
+                },
                 backgroundColor: Colors.blue,
                 foregroundColor: Colors.white,
                 icon: Icons.edit,
@@ -84,7 +96,7 @@ class ElementosListas extends StatelessWidget {
                   children: [
                     //-- Título de la lista
                     Text(
-                      title,
+                      nombre,
                       style: const TextStyle(fontSize: 24),
                     ),
                     //-- Botón de opciones
@@ -94,7 +106,7 @@ class ElementosListas extends StatelessWidget {
                         showModalBottomSheet(
                           context: context,
                           builder: (context) {
-                            return OpcionesListado(idLista: id);
+                            return OpcionesListado(idLista: id, nombreLista: nombre,);
                           },
                         );
                       },
@@ -113,10 +125,10 @@ class ElementosListas extends StatelessWidget {
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(10),
                   child: LinearProgressIndicator(
-                    value: progress,
+                    value: progreso,
                     minHeight: 10,
                     backgroundColor: Colors.grey.shade300,
-                    valueColor: AlwaysStoppedAnimation<Color>(colorBaseProgreso(progress)),
+                    valueColor: AlwaysStoppedAnimation<Color>(colorBaseProgreso(progreso)),
                   ),
                 ),
               ),

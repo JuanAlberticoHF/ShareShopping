@@ -144,8 +144,8 @@ class ListasUsuarioPageState extends State<ListasUsuarioPage> {
 
                   return ElementosListas(
                     id: listado.id,
-                    title: listado['nombre'],
-                    progress: valorProgreso,
+                    nombre: listado['nombre'],
+                    progreso: valorProgreso,
                     itemsText: textoProgreso,
                     onDelete: () {
                       fireStoreService.deleteListado(listado.id);

@@ -1,23 +1,25 @@
 
 import 'package:flutter/material.dart';
+import 'package:shareshopping/core/services/listados_fb.dart';
 
-class OpcionesListado extends StatelessWidget{
+import 'editar_nombre_dialog.dart';
 
-  const OpcionesListado({super.key, required this.idLista});
+class OpcionesListado extends StatelessWidget {
+  OpcionesListado({super.key, required this.idLista, required this.nombreLista});
 
-  final String idLista; // Identificador único de la lista
+  final String idLista;
+  final FireStoreService fireStoreService = FireStoreService();
+  final String nombreLista;
 
   @override
   Widget build(BuildContext context) {
     return BottomSheet(
       backgroundColor: Colors.white,
       builder: (BuildContext context) {
-        // LISTA DE ACCIONES
         return Container(
           padding: const EdgeInsets.all(20.0),
           child: Column(
             mainAxisSize: MainAxisSize.min,
-            // EDITAR, COMPARTIR, ELIMINAR
             children: <Widget>[
               Container(
                 width: 150,
@@ -28,26 +30,32 @@ class OpcionesListado extends StatelessWidget{
                 ),
               ),
               SizedBox(height: 8),
-              Text("Opciones", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 22),
-              ),
-              ListTile( // EDITAR
+              Text("Opciones", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 22)),
+              ListTile(
                 leading: const Icon(Icons.edit, color: Colors.blue),
                 title: const Text('Editar'),
-                onTap: () { // TODO EDITAR
+                onTap: () {
                   Navigator.pop(context);
+                  EditarNombreDialog.show(
+                    context,
+                    nombreInicial: nombreLista,
+                    onSave: (nuevoNombre) {
+                      fireStoreService.updateListadoName(idLista, nuevoNombre);
+                    },
+                  );
                 },
               ),
-              ListTile( // COMPARTIR
+              ListTile(
                 leading: const Icon(Icons.person_add, color: Colors.green),
                 title: const Text('Compartir'),
-                onTap: () { // TODO COMPARTIR
+                onTap: () {
                   Navigator.pop(context);
                 },
               ),
-              ListTile( // ELIMINAR
+              ListTile(
                 leading: const Icon(Icons.delete, color: Colors.red),
                 title: const Text('Eliminar'),
-                onTap: () { // TODO ELIMINAR
+                onTap: () {
                   Navigator.pop(context);
                 },
               ),
@@ -55,7 +63,7 @@ class OpcionesListado extends StatelessWidget{
           ),
         );
       },
-      onClosing: () {  },
+      onClosing: () {},
     );
   }
 }
