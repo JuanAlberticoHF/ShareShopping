@@ -1,9 +1,9 @@
 
 import 'package:flutter/material.dart';
 
-class opcionesListado extends StatelessWidget{
+class OpcionesListado extends StatelessWidget{
 
-  const opcionesListado({super.key, required this.idLista});
+  const OpcionesListado({super.key, required this.idLista});
 
   final String idLista; // Identificador único de la lista
 
@@ -19,28 +19,36 @@ class opcionesListado extends StatelessWidget{
             mainAxisSize: MainAxisSize.min,
             // EDITAR, COMPARTIR, ELIMINAR
             children: <Widget>[
+              Container(
+                width: 150,
+                height: 5,
+                decoration: BoxDecoration(
+                  color: Colors.black,
+                  borderRadius: BorderRadius.circular(8),
+                ),
+              ),
+              SizedBox(height: 8),
+              Text("Opciones", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 22),
+              ),
               ListTile( // EDITAR
                 leading: const Icon(Icons.edit, color: Colors.blue),
                 title: const Text('Editar'),
-                onTap: () {
+                onTap: () { // TODO EDITAR
                   Navigator.pop(context);
-                  print("BottomSheet - Editar: $idLista");
                 },
               ),
               ListTile( // COMPARTIR
                 leading: const Icon(Icons.person_add, color: Colors.green),
                 title: const Text('Compartir'),
-                onTap: () {
+                onTap: () { // TODO COMPARTIR
                   Navigator.pop(context);
-                  print("BottomSheet - Compartir: $idLista");
                 },
               ),
               ListTile( // ELIMINAR
                 leading: const Icon(Icons.delete, color: Colors.red),
                 title: const Text('Eliminar'),
-                onTap: () {
+                onTap: () { // TODO ELIMINAR
                   Navigator.pop(context);
-                  print("BottomSheet - Eliminar: $idLista");
                 },
               ),
             ],

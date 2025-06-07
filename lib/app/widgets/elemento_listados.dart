@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
-import 'package:shareshopping/app/pages/mainPages/widgets/bottonsheet.dart';
 import 'package:shareshopping/app/pages/operationPages/articulos_listas_page.dart';
+
+import 'bottonsheet.dart';
 
 class ElementosListas extends StatelessWidget {
   final String id; // Identificador
@@ -28,16 +29,18 @@ class ElementosListas extends StatelessWidget {
           MaterialPageRoute(
             builder: (context) => ArticulosListasPage(
                 listaId: id,
-                progress: progress),
+                progress: progress,
+                nombreLista: title,
+            ),
           ),
         );
       },
       child: Card(
-        color: ThemeData.light().cardColor, // Color del fondo de la tarjeta
+        color: Colors.white, // Color del fondo de la tarjeta
         clipBehavior: Clip.antiAlias,
         elevation: 2,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-        //-- Tarjeta que contiene el Slidable
+        // Tarjeta que contiene el Slidable
         child: Slidable(
           key: ValueKey(id), // Clave única para el Slidable
           endActionPane: ActionPane( // Deslizar hacia la izquierda para mostrar acciones
@@ -91,7 +94,7 @@ class ElementosListas extends StatelessWidget {
                         showModalBottomSheet(
                           context: context,
                           builder: (context) {
-                            return opcionesListado(idLista: id);
+                            return OpcionesListado(idLista: id);
                           },
                         );
                       },
