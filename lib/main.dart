@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:shareshopping/app/pages/mainPages/perfil_usuario_page.dart';
 import 'app/pages/mainPages/listas_compartidas_page.dart';
 import 'app/pages/mainPages/mis_listas_page.dart';
 import 'data/sources/firebase_options.dart';
@@ -41,6 +42,7 @@ class _MainPageState extends State<MainPage> {
   static final List<Widget> _pages = [
     ListasUsuarioPage(), // Indice 0
     ListasCompartidasPage(), // Indice 1
+    PerfilUsuarioPage(), // Indice 2
   ];
 
   void _onPageChanged(int index) {
@@ -68,6 +70,10 @@ class _MainPageState extends State<MainPage> {
           BottomNavigationBarItem(
             icon: Icon(Icons.share),
             label: 'Compartidas',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.person),
+            label: 'Perfil',
           ),
         ],
         onTap: (index) {
