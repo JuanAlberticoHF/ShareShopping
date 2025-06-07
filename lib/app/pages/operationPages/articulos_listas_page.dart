@@ -6,11 +6,13 @@ import '../../../core/services/listados_fb.dart'; // Servicio de Firestore
 class ArticulosListasPage extends StatefulWidget {
   final String listaId; // ID del listado
   final double progress; // Progreso inicial
+  final String nombreLista; // Nombre del listado
 
   const ArticulosListasPage({
     super.key,
     required this.listaId,
     required this.progress,
+    required this.nombreLista,
   });
 
   @override
@@ -18,33 +20,18 @@ class ArticulosListasPage extends StatefulWidget {
 }
 
 class _ArticulosListasPageState extends State<ArticulosListasPage> {
-  // Variables
-  FireStoreService fireStoreService = FireStoreService();
+  // Variables de la pagina
+  final FireStoreService fireStoreService = FireStoreService(); // Servicio de Firestore
+  final TextEditingController _controller = TextEditingController();
   late double progressValue; // Valor del progreso
 
-  // Ciclo de vida
+  // Al inicio inicializamos el progreso del los articulos marcados
   @override
   void initState() {
     super.initState();
     progressValue = widget.progress;
   }
-
-  void recalcularProgreso(List<dynamic> articulos) {
-    final total = articulos.length;
-    if (total == 0) {
-      setState(() {
-        progressValue = 0.0;
-      });
-      return;
-    }
-    final marcados = articulos.where((a) => a['check'] == true).length;
-    setState(() {
-      progressValue = marcados / total;
-    });
-  }
-
-  final TextEditingController _controller = TextEditingController();
-
+  /// Agrega un nuevo artículo a la lista.
   void _agregarArticulo() async {
     final nombre = _controller.text.trim();
     if (nombre.isEmpty) return;
@@ -69,17 +56,35 @@ class _ArticulosListasPageState extends State<ArticulosListasPage> {
     _controller.clear();
   }
 
+  /// Recalcula el progreso de los artículos marcados en la lista.
+  void recalcularProgreso(List<dynamic> articulos) {
+    final total = articulos.length;
+    if (total == 0) {
+      setState(() {
+        progressValue = 0.0;
+      });
+      return;
+    }
+    final marcados = articulos.where((a) => a['check'] == true).length;
+    setState(() {
+      progressValue = marcados / total;
+    });
+  }
+
+  /*
+  * WIDGET
+  */
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Artículos de la lista"),
+        title: Text(widget.nombreLista),
         backgroundColor: Colors.white70,
       ),
       backgroundColor: Colors.white,
       body: Column(
         children: [
-          // 👉 Input con botón +
+          // TextField para añadir artículos con boton de añadir
           Padding(
             // Padding personalizados
             padding: const EdgeInsets.only(left: 12, right: 12, bottom: 8),
@@ -112,11 +117,13 @@ class _ArticulosListasPageState extends State<ArticulosListasPage> {
               ),
             ),
           ),
+          // Indicador de progreso
           LinearProgressIndicator(
             color: Colors.green,
             backgroundColor: Colors.grey[200],
             value: progressValue,
           ),
+          // Listado de artículos
           Expanded(
             child: StreamBuilder<DocumentSnapshot>(
               stream: fireStoreService.getListadoStreamById(widget.listaId),
@@ -148,7 +155,6 @@ class _ArticulosListasPageState extends State<ArticulosListasPage> {
                         child: const Icon(Icons.delete, color: Colors.white),
                       ),
                       onDismissed: (direction) async {
-                        final articuloEliminado = articulos[index];
                         List<dynamic> nuevosArticulos = List.from(articulos)
                           ..removeAt(index);
                         try {

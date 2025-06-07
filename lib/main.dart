@@ -6,7 +6,7 @@ import 'app/pages/mainPages/mis_listas_page.dart';
 import 'data/sources/firebase_options.dart';
 
 void main() async {
-  WidgetsFlutterBinding.ensureInitialized(); // Asegura que el sistema de bindings de Flutter esté completamente inicializado antes de ejecutar cualquier código que dependa de él
+  WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
@@ -16,7 +16,6 @@ void main() async {
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(

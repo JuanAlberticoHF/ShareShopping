@@ -2,7 +2,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../core/services/listados_fb.dart';
-import '../mainPages/widgets/elemento_listados.dart';
+import '../../widgets/elemento_listados.dart';
 
 class PapeleraPage extends StatefulWidget {
   const PapeleraPage({super.key});
