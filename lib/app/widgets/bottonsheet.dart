@@ -56,6 +56,7 @@ class OpcionesListado extends StatelessWidget {
                 leading: const Icon(Icons.delete, color: Colors.red),
                 title: const Text('Eliminar'),
                 onTap: () {
+                  fireStoreService.updateListadoOperativo(idLista, false);
                   Navigator.pop(context);
                 },
               ),

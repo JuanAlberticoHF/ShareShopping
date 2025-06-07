@@ -2,7 +2,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../core/services/listados_fb.dart';
-import '../../widgets/elemento_listados.dart';
+import '../../widgets/elemento_listados_papelera.dart';
 
 class PapeleraPage extends StatefulWidget {
   const PapeleraPage({super.key});
@@ -50,34 +50,6 @@ class PapeleraPageState extends State<PapeleraPage> {
               });
             },
           ),
-          PopupMenuButton<String>(
-            icon: const Icon(Icons.more_vert, color: Colors.black),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(10),
-            ),
-            color: Colors.white,
-            onSelected: (value) {
-              if (value == 'papelera') {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => PapeleraPage(),
-                  ),
-                );
-              }
-            },
-            itemBuilder: (context) => [
-              PopupMenuItem(
-                value: 'papelera',
-                child: Row(
-                  children: const [
-                    Icon(Icons.delete, color: Colors.red),
-                    Text('Papelera'),
-                  ],
-                ),
-              ),
-            ],
-          )
         ],
         backgroundColor: Colors.white70,
         foregroundColor: Colors.black,
@@ -106,10 +78,10 @@ class PapeleraPageState extends State<PapeleraPage> {
 
                 // 🔍 Filtrar por búsqueda
                 final listasFiltradas = _searchText.isEmpty
-                    ? listados
+                    ? listados.where((listado) => listado['operativa'] == false).toList()
                     : listados.where((listado) {
                   final nombreLista = listado['nombre'].toString().toLowerCase();
-                  return nombreLista.contains(_searchText);
+                  return nombreLista.contains(_searchText) && listado['operativa'] == false;
                 }).toList();
 
                 return ListView.builder(
@@ -127,7 +99,7 @@ class PapeleraPageState extends State<PapeleraPage> {
                     final textoProgreso = "$articulosMarcados/$cantidadArticulos";
                     double valorProgreso = cantidadArticulos > 0 ? articulosMarcados / cantidadArticulos : 0;
 
-                    return ElementosListas(
+                    return ElementosListasPapelera(
                       id: listado.id,
                       nombre: listado['nombre'],
                       progreso: valorProgreso,
