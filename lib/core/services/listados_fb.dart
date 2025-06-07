@@ -10,6 +10,7 @@ class FireStoreService {
     final listadoObj = <String, dynamic>{
       'nombre': nombre,
       'creador': 1, // TODO : Cambiar por el ID del usuario actual
+      'operativa': true,
       'fecha_creacion': Timestamp.fromDate(DateTime.now()),
       'fecha_modificacion': Timestamp.fromDate(DateTime.now()),
       'articulos': [],
@@ -32,26 +33,19 @@ class FireStoreService {
   }
 
   // UPDATE: actualizar un listado
-  // Future<void> updateListado(String id, String titulo, String descripcion) async {
-  //   final listadoObj = <String, String>{
-  //     'titulo': titulo,
-  //     'descripcion': descripcion,
-  //     'fechaModificacion': DateTime.now().toIso8601String(),
-  //   };
-  //   await dbListados.doc(id).update(listadoObj);
-  // }
-  // updateListadoArticulos():
-  Future<void> updateListado(String id, List<dynamic> articulos) async {
+  // updateListadoName():
+  Future<void> updateListadoName(String id, String nombre) async {
     final listadoObj = <String, dynamic>{
-      'articulos': articulos,
+      'nombre': nombre,
       'fecha_modificacion': Timestamp.fromDate(DateTime.now()),
     };
     await dbListados.doc(id).update(listadoObj);
   }
 
-  Future<void> updateListadoName(String id, String nombre) async {
+  // updateListadoArticulos():
+  Future<void> updateListado(String id, List<dynamic> articulos) async {
     final listadoObj = <String, dynamic>{
-      'nombre': nombre,
+      'articulos': articulos,
       'fecha_modificacion': Timestamp.fromDate(DateTime.now()),
     };
     await dbListados.doc(id).update(listadoObj);
@@ -71,6 +65,15 @@ class FireStoreService {
         await updateListado(id, articulos);
       }
     }
+  }
+
+  // updateArticuloOperativo():
+  Future<void> updateListadoOperativo(String id, bool operativa) async {
+    final listadoObj = <String, dynamic>{
+      'operativa': operativa,
+      'fecha_modificacion': Timestamp.fromDate(DateTime.now()),
+    };
+    await dbListados.doc(id).update(listadoObj);
   }
 
   // Delete: eliminar un listado

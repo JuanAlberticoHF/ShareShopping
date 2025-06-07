@@ -8,11 +8,11 @@ class PerfilUsuarioPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Perfil do Usuário'),
+        title: const Text('Perfil de Usuario'),
       ),
       body: Center(
         child: Text(
-          'Página de Perfil do Usuário',
+          'Contenido del perfil de usuario',
           style: Theme.of(context).textTheme.headlineMedium,
         ),
       ),

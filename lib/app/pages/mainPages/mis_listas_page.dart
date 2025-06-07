@@ -121,10 +121,10 @@ class ListasUsuarioPageState extends State<ListasUsuarioPage> {
 
               // 🔍 Filtrar por búsqueda
               final listasFiltradas = _searchText.isEmpty
-                  ? listados
+                  ? listados.where((listado) => listado['operativa'] == true).toList()
                   : listados.where((listado) {
                 final nombreLista = listado['nombre'].toString().toLowerCase();
-                return nombreLista.contains(_searchText);
+                return nombreLista.contains(_searchText) && listado['operativa'] == true;
               }).toList();
 
               return ListView.builder(
@@ -148,7 +148,7 @@ class ListasUsuarioPageState extends State<ListasUsuarioPage> {
                     progreso: valorProgreso,
                     itemsText: textoProgreso,
                     onDelete: () {
-                      fireStoreService.deleteListado(listado.id);
+                      fireStoreService.updateListadoOperativo(listado.id, false);
                     },
                   );
                 },

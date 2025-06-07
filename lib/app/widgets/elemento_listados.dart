@@ -79,7 +79,11 @@ class ElementosListas extends StatelessWidget {
               ),
               SlidableAction(
                 //-- Accion Eliminar
-                onPressed: (context) {},
+                onPressed: (context) {
+                  if (onDelete != null) {
+                    onDelete!(); // Llama al callback para eliminar el elemento
+                  }
+                },
                 backgroundColor: Colors.red,
                 foregroundColor: Colors.white,
                 icon: Icons.delete,
