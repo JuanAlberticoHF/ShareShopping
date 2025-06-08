@@ -141,6 +141,17 @@ class FireStoreService {
     }
   }
 
+  Future<void> updateListadoCompartidosRemove(String id, String uid) async {
+    DocumentSnapshot doc = await dbListados.doc(id).get();
+    if (doc.exists) {
+      List<dynamic> compartidos = doc.get('compartidos');
+      if (compartidos.contains(uid)) {
+        compartidos.remove(uid);
+        await updateListadoCompartidos(id, compartidos.cast<String>());
+      }
+    }
+  }
+
   // DELETE: eliminar un listado
   Future<void> deleteListado(String id) async {
     await dbListados.doc(id).delete();

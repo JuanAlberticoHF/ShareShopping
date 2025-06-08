@@ -5,6 +5,8 @@ import "../../../core/services/listados_fb.dart";
 import "../../widgets/elemento_listados.dart";
 import 'package:firebase_auth/firebase_auth.dart';
 
+import "../../widgets/elemento_listados_compartidos.dart";
+
 class ListasCompartidasPage extends StatefulWidget {
   const ListasCompartidasPage({super.key});
 
@@ -108,13 +110,13 @@ class ListasCompartidasPageState extends State<ListasCompartidasPage> {
                   final textoProgreso = "$articulosMarcados/$cantidadArticulos";
                   double valorProgreso = cantidadArticulos > 0 ? articulosMarcados / cantidadArticulos : 0;
 
-                  return ElementosListas(
+                  return ElementosListasCompartidas(
                     id: listado.id,
                     nombre: listado['nombre'],
                     progreso: valorProgreso,
                     itemsText: textoProgreso,
-                    onDelete: () {
-                      fireStoreService.updateListadoOperativo(listado.id, false);
+                    onLeave: () {
+                      fireStoreService.updateListadoCompartidosRemove(listado.id, uidUsuarioActivo);
                     },
                   );
                 },

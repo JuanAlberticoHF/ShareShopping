@@ -165,7 +165,7 @@ class ListasUsuarioPageState extends State<ListasUsuarioPage> {
                   final textoProgreso = "$articulosMarcados/$cantidadArticulos";
                   double valorProgreso = cantidadArticulos > 0 ? articulosMarcados / cantidadArticulos : 0;
 
-                  return ElementosListasCompartidas(
+                  return ElementosListas(
                     id: listado.id,
                     nombre: listado['nombre'],
                     progreso: valorProgreso,
