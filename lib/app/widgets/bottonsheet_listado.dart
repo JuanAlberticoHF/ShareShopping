@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:shareshopping/core/services/listados_fb.dart';
 
+import 'bottonsheet_compartir.dart';
 import 'editar_nombre_dialog.dart';
 
 class OpcionesListado extends StatelessWidget {
@@ -50,6 +51,12 @@ class OpcionesListado extends StatelessWidget {
                 title: const Text('Compartir'),
                 onTap: () {
                   Navigator.pop(context);
+                  showModalBottomSheet(
+                    context: context,
+                    builder: (context) {
+                      return CompartirLista(idLista: idLista, nombreLista: nombreLista,);
+                    },
+                  );
                 },
               ),
               ListTile(

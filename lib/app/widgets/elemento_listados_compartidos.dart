@@ -7,14 +7,14 @@ import '../../core/services/listados_fb.dart';
 import 'bottonsheet_listado.dart';
 import 'editar_nombre_dialog.dart';
 
-class ElementosListas extends StatelessWidget {
+class ElementosListasCompartidas extends StatelessWidget {
   final String id; // Identificador
   final String nombre; // Título
   final double progreso; // Progreso
   final String itemsText; // Elementos "X/Y"// Callback para eliminar el elemento
   final VoidCallback? onDelete;
 
-  ElementosListas({
+  ElementosListasCompartidas({
     super.key,
     required this.id,
     required this.nombre,
