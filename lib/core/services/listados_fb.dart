@@ -14,6 +14,7 @@ class FireStoreService {
       'operativa': true,
       'fecha_creacion': Timestamp.fromDate(DateTime.now()),
       'fecha_modificacion': Timestamp.fromDate(DateTime.now()),
+      'compartidos': [],
       'articulos': [],
     };
     await dbListados.add(listadoObj);

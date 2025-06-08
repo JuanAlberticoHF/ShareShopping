@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:shareshopping/core/services/auth_service.dart';
+import 'package:shareshopping/core/services/usuarios_fb.dart';
 
 class RegistrarPage extends StatefulWidget {
   const RegistrarPage({super.key});
@@ -15,12 +16,21 @@ class _RegistrarPageState extends State<RegistrarPage> {
   final _passwordController = TextEditingController();
   final _confirmController = TextEditingController();
 
+  final FireStoreServiceUsers fireStoreServiceUsers = FireStoreServiceUsers();
+
   void registrar() async {
     try {
-      await authServiceNotifier.value.crearUsuario(
+      User? user = await authServiceNotifier.value.crearUsuario(
         _emailController.text,
         _passwordController.text,
       );
+      String uid = user!.uid;
+      String? email = user.email;
+
+      if (uid != null && email != null) {
+        fireStoreServiceUsers.addUsuario(uid, email);
+      }
+
     } on FirebaseException catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Error: ${e.message}')),
