@@ -9,13 +9,14 @@ class AddListasPage extends StatelessWidget {
   final TextEditingController _controller = TextEditingController();
   final FireStoreService fireStoreService = FireStoreService();
 
-  final int creador = 1; // TODO: Cambiar por el ID del usuario que crea la lista
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(),
+      appBar: AppBar(
+        backgroundColor: Colors.white70,
+      ),
       resizeToAvoidBottomInset: true, // Asegura que el contenido se ajuste cuando aparece el teclado
+      backgroundColor: Colors.white,
       body: Column(
         children: [
           // Logo aplicación en la parte superior
