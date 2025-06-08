@@ -1,5 +1,6 @@
 import "package:flutter/material.dart";
 import "package:shareshopping/app/pages/operationPages/papelera_page.dart";
+import "package:shareshopping/core/services/auth_service.dart";
 import "../../../core/services/listados_fb.dart";
 import "../../widgets/elemento_listados.dart";
 import "../operationPages/add_listas_page.dart";
@@ -18,9 +19,74 @@ class ListasUsuarioPageState extends State<ListasUsuarioPage> {
   bool _isSearching = false;
   final TextEditingController _searchController = TextEditingController();
   String _searchText = "";
+  String? uidUsuarioActivo = authServiceNotifier.value.currentUser?.uid;
 
   @override
   Widget build(BuildContext context) {
+    String? uidUsuarioActivo = authServiceNotifier.value.currentUser?.uid;
+    Widget widgetListado;
+
+    if (uidUsuarioActivo == null) {
+      widgetListado = const Center(
+        child: Text("No hay usuario activo"),
+      );
+    } else {
+      widgetListado = StreamBuilder (
+          stream: fireStoreService.getListadosByCreador(uidUsuarioActivo),
+          builder: (context, snapshot) {
+            if (snapshot.hasError) {
+              return Center(
+                child: Text("Error: ${snapshot.error}"),
+              );
+            }
+
+            if (!snapshot.hasData) {
+              return const Center(
+                child: CircularProgressIndicator(),
+              );
+            }
+
+            // Listados de Firestore
+            final listados = snapshot.data!.docs;
+
+            // 🔍 Filtrar por búsqueda
+            final listasFiltradas = _searchText.isEmpty
+                ? listados.where((listado) => listado['operativa'] == true).toList()
+                : listados.where((listado) {
+              final nombreLista = listado['nombre'].toString().toLowerCase();
+              return nombreLista.contains(_searchText) && listado['operativa'] == true;
+            }).toList();
+
+            return ListView.builder(
+              itemCount: listasFiltradas.length,
+              itemBuilder: (BuildContext context, int index) {
+                final listado = listasFiltradas[index];
+                final articulo = listado.get("articulos");
+
+                // Calcular progreso
+                int cantidadArticulos = articulo.length;
+                int articulosMarcados = 0;
+                for (var art in articulo) {
+                  if (art['check'] == true) articulosMarcados++;
+                }
+                final textoProgreso = "$articulosMarcados/$cantidadArticulos";
+                double valorProgreso = cantidadArticulos > 0 ? articulosMarcados / cantidadArticulos : 0;
+
+                return ElementosListas(
+                  id: listado.id,
+                  nombre: listado['nombre'],
+                  progreso: valorProgreso,
+                  itemsText: textoProgreso,
+                  onDelete: () {
+                    fireStoreService.updateListadoOperativo(listado.id, false);
+                  },
+                );
+              },
+            );
+          }
+      );
+    }
+
     return Scaffold(
       appBar: AppBar(
         title: _isSearching
@@ -85,6 +151,7 @@ class ListasUsuarioPageState extends State<ListasUsuarioPage> {
       ),
       backgroundColor: Colors.grey[200],
       floatingActionButton: FloatingActionButton.extended(
+        heroTag: "btnNuevaLista",
         elevation: 4,
         backgroundColor: Colors.blue,
         icon: const Icon(Icons.add, color: Colors.white),
@@ -101,60 +168,7 @@ class ListasUsuarioPageState extends State<ListasUsuarioPage> {
       body: Container(
         color: Colors.white70,
         padding: const EdgeInsets.all(5.0),
-        child: StreamBuilder (
-          stream: fireStoreService.getListados(),
-            builder: (context, snapshot) {
-              if (snapshot.hasError) {
-                return Center(
-                  child: Text("Error: ${snapshot.error}"),
-                );
-              }
-
-              if (!snapshot.hasData) {
-                return const Center(
-                  child: CircularProgressIndicator(),
-                );
-              }
-
-              // Listados de Firestore
-              final listados = snapshot.data!.docs;
-
-              // 🔍 Filtrar por búsqueda
-              final listasFiltradas = _searchText.isEmpty
-                  ? listados.where((listado) => listado['operativa'] == true).toList()
-                  : listados.where((listado) {
-                final nombreLista = listado['nombre'].toString().toLowerCase();
-                return nombreLista.contains(_searchText) && listado['operativa'] == true;
-              }).toList();
-
-              return ListView.builder(
-                itemCount: listasFiltradas.length,
-                itemBuilder: (BuildContext context, int index) {
-                  final listado = listasFiltradas[index];
-                  final articulo = listado.get("articulos");
-
-                  // Calcular progreso
-                  int cantidadArticulos = articulo.length;
-                  int articulosMarcados = 0;
-                  for (var art in articulo) {
-                    if (art['check'] == true) articulosMarcados++;
-                  }
-                  final textoProgreso = "$articulosMarcados/$cantidadArticulos";
-                  double valorProgreso = cantidadArticulos > 0 ? articulosMarcados / cantidadArticulos : 0;
-
-                  return ElementosListas(
-                    id: listado.id,
-                    nombre: listado['nombre'],
-                    progreso: valorProgreso,
-                    itemsText: textoProgreso,
-                    onDelete: () {
-                      fireStoreService.updateListadoOperativo(listado.id, false);
-                    },
-                  );
-                },
-              );
-            }
-        )
+        child: widgetListado
       ),
     );
   }

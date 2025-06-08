@@ -1,15 +1,16 @@
 
 import 'package:firebase_cloud_firestore/firebase_cloud_firestore.dart';
+import 'auth_service.dart';
 
 class FireStoreService {
   final CollectionReference dbListados = FirebaseFirestore.instance.collection('listados');
 
   // CREATE: añadir un nuevo listado
-  // Crea un nuevo listado con el nombre proporcionado
   Future<void> addListado(String nombre) async {
+    final String? uidUsuarioActivo = authServiceNotifier.value.currentUser?.uid;
     final listadoObj = <String, dynamic>{
       'nombre': nombre,
-      'creador': 1, // TODO : Cambiar por el ID del usuario actual
+      'creador': uidUsuarioActivo ?? "1",
       'operativa': true,
       'fecha_creacion': Timestamp.fromDate(DateTime.now()),
       'fecha_modificacion': Timestamp.fromDate(DateTime.now()),
@@ -19,13 +20,16 @@ class FireStoreService {
   }
 
   // READ:
-  //Devuelve un Stream de QuerySnapshot
   Stream<QuerySnapshot> getListados() {
     return dbListados.snapshots();
   }
-  //Obtener un listado por ID devuelve un Future de DocumentSnapshot
+
   Future<DocumentSnapshot> getListadoById(String id) {
     return dbListados.doc(id).get();
+  }
+
+  Stream<QuerySnapshot> getListadosByCreador(String creadorUid) {
+    return dbListados.where('creador', isEqualTo: creadorUid).snapshots();
   }
 
   Stream<DocumentSnapshot> getListadoStreamById(String id) {
@@ -33,7 +37,6 @@ class FireStoreService {
   }
 
   // UPDATE: actualizar un listado
-  // updateListadoName():
   Future<void> updateListadoName(String id, String nombre) async {
     final listadoObj = <String, dynamic>{
       'nombre': nombre,
@@ -42,7 +45,6 @@ class FireStoreService {
     await dbListados.doc(id).update(listadoObj);
   }
 
-  // updateListadoArticulos():
   Future<void> updateListado(String id, List<dynamic> articulos) async {
     final listadoObj = <String, dynamic>{
       'articulos': articulos,
@@ -51,23 +53,17 @@ class FireStoreService {
     await dbListados.doc(id).update(listadoObj);
   }
 
-  // updateArticuloCheck():
   Future<void> updateArticuloCheck(String id, int index, bool bool) async {
-    // Obtiene el listado por ID
     DocumentSnapshot doc = await dbListados.doc(id).get();
     if (doc.exists) {
-      // Obtiene los artículos del listado
       List<dynamic> articulos = doc.get('articulos');
-      // Actualiza el artículo en la posición index
       if (index < articulos.length) {
         articulos[index]['check'] = bool;
-        // Actualiza el listado con los artículos modificados
         await updateListado(id, articulos);
       }
     }
   }
 
-  // updateArticuloOperativo():
   Future<void> updateListadoOperativo(String id, bool operativa) async {
     final listadoObj = <String, dynamic>{
       'operativa': operativa,
@@ -76,9 +72,7 @@ class FireStoreService {
     await dbListados.doc(id).update(listadoObj);
   }
 
-  // Delete: eliminar un listado
   Future<void> deleteListado(String id) async {
     await dbListados.doc(id).delete();
   }
-
 }
