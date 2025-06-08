@@ -7,12 +7,12 @@ class FireStoreServiceUsers {
   // CREATE: añadir un nuevo nuevo usuario
   Future<void> addUsuario(String uid, String correo) async {
     final usuarioObj = <String, dynamic>{
-      'uid': uid,
       'correo': correo,
       'fecha_creacion': Timestamp.fromDate(DateTime.now()),
       'fecha_modificacion': Timestamp.fromDate(DateTime.now()),
     };
-    await dbUsuarios.add(usuarioObj);
+    // Usar set con el doc(uid) para que el uid sea el identificador del documento
+    await dbUsuarios.doc(uid).set(usuarioObj);
   }
 
   // READ: Obtener usuarios

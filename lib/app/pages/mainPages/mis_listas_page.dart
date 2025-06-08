@@ -1,5 +1,7 @@
+import "package:firebase_cloud_firestore/firebase_cloud_firestore.dart";
 import "package:flutter/material.dart";
 import "package:shareshopping/app/pages/operationPages/papelera_page.dart";
+import "package:shareshopping/app/widgets/elemento_listados_compartidos.dart";
 import "package:shareshopping/core/services/auth_service.dart";
 import "../../../core/services/listados_fb.dart";
 import "../../widgets/elemento_listados.dart";
@@ -134,7 +136,7 @@ class ListasUsuarioPageState extends State<ListasUsuarioPage> {
                 return Center(child: Text("Error: ${snapshotListas.error}"));
               }
               if (!snapshotListas.hasData || snapshotListas.data!.docs.isEmpty) {
-                return const Center(child: Text("No tienes listas activas"));
+                return const Center(child: Text("No se han encontrado listas"));
               }
 
               final listados = snapshotListas.data!.docs;
@@ -146,7 +148,7 @@ class ListasUsuarioPageState extends State<ListasUsuarioPage> {
               }).toList();
 
               if (listasFiltradas.isEmpty) {
-                return const Center(child: Text("No tienes listas activas"));
+                return const Center(child: Text("No se han encontrado listas"));
               }
 
               return ListView.builder(
@@ -163,7 +165,7 @@ class ListasUsuarioPageState extends State<ListasUsuarioPage> {
                   final textoProgreso = "$articulosMarcados/$cantidadArticulos";
                   double valorProgreso = cantidadArticulos > 0 ? articulosMarcados / cantidadArticulos : 0;
 
-                  return ElementosListas(
+                  return ElementosListasCompartidas(
                     id: listado.id,
                     nombre: listado['nombre'],
                     progreso: valorProgreso,
