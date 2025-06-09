@@ -27,7 +27,7 @@ class _RegistrarPageState extends State<RegistrarPage> {
       String uid = user!.uid;
       String? email = user.email;
 
-      if (uid != null && email != null) {
+      if (email != null) {
         fireStoreServiceUsers.addUsuario(uid, email);
       }
 
