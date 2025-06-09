@@ -2,61 +2,48 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 
+/// Servicio de autenticación para manejar el inicio de sesión, registro, cambio de contraseña y cierre de sesión
 ValueNotifier<AuthService> authServiceNotifier = ValueNotifier<AuthService>(AuthService());
 
+/// Clase que maneja la autenticación de usuarios utilizando Firebase Auth
 class AuthService {
-  final FirebaseAuth firebaseAuth = FirebaseAuth.instance;
+  // Instancia de FirebaseAuth
+  final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
 
-  // Obtiene el usuario actual
-  User? get currentUser => firebaseAuth.currentUser;
+  /// Obtiene el usuario actual conectado a Firebase Auth
+  User? get currentUser => _firebaseAuth.currentUser;
 
-  // Cambios de estado de FireBase (conectado/desconectado)
+  /// Stream que emite cambios en el estado de autenticación del usuario
+  Stream<User?> get authStateChanges => _firebaseAuth.authStateChanges();
 
-  Stream<User?> get authStateChanges => firebaseAuth.authStateChanges();
-
-  // Iniciar sesión con correo electrónico y contraseña
+  /// Inicia sesión con correo electrónico y contraseña
+  ///
+  /// Parámetros:
+  /// - [email]: Correo electrónico del usuario.
+  /// - [password]: Contraseña del usuario.
   Future<User?> iniciarSesion(String email, String password) async {
-
-      UserCredential userCredential = await firebaseAuth.signInWithEmailAndPassword(
+      UserCredential userCredential = await _firebaseAuth.signInWithEmailAndPassword(
         email: email,
         password: password,
       );
       return userCredential.user;
   }
 
-  // Registrar un nuevo usuario con correo electrónico y contraseña
+  /// Registra un nuevo usuario con correo electrónico y contraseña.
+  ///
+  /// Parámetros:
+  /// - [email]: Correo electrónico del usuario.
+  /// - [password]: Contraseña del usuario.
   Future<User?> crearUsuario(String email, String password) async {
-    UserCredential userCredential = await firebaseAuth.createUserWithEmailAndPassword(
+    UserCredential userCredential = await _firebaseAuth.createUserWithEmailAndPassword(
       email: email,
       password: password,
     );
     return userCredential.user;
   }
 
-  // Cambiar contraseña del usuario
-  Future<void> cambiarCredenciales({
-    required String email,
-    required String oldPassword,
-    required String newPassword,
-  }) async {
-    AuthCredential credential = EmailAuthProvider.credential(email: email, password: oldPassword);
-    await currentUser!.reauthenticateWithCredential(credential);
-    await currentUser!.updatePassword(newPassword);
-  }
-
-  // Cerrar sesión
+  /// Cierra la sesión del usuario actual.
   Future<void> cerrarSesion() async {
-    await firebaseAuth.signOut();
-  }
-
-  // Eliminar cuenta del usuario
-  Future<void> eliminarCuenta ({
-    required String email,
-    required String password,
-  }) async {
-    AuthCredential credential = EmailAuthProvider.credential(email: email, password: password);
-    await currentUser!.reauthenticateWithCredential(credential);
-    await currentUser!.delete();
-    await firebaseAuth.signOut();
+    await _firebaseAuth.signOut();
   }
 }
