@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:shareshopping/app/pages/authPages/registrar_page.dart';
+import 'package:ShareShopping/app/pages/authPages/registrar_page.dart';
 import 'iniciar_sesion_page.dart';
 
 class SinCuentaPage extends StatelessWidget {

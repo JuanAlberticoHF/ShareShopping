@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
-import 'package:shareshopping/app/pages/operationPages/articulos_listas_page.dart';
-import 'package:shareshopping/app/widgets/bottonsheet_listado_salir.dart';
+import 'package:ShareShopping/app/pages/operationPages/articulos_listas_page.dart';
+import 'package:ShareShopping/app/widgets/bottonsheet_listado_salir.dart';
 
 import '../../core/services/listados_fb.dart';
 import 'bottonsheet_visualizar_compartir.dart';

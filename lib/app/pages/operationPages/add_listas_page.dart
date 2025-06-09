@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 
 import '../../../core/services/listados_fb.dart';
 
-
 class AddListasPage extends StatelessWidget {
   AddListasPage({super.key});
 
@@ -12,55 +11,68 @@ class AddListasPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.white70,
-      ),
-      resizeToAvoidBottomInset: true, // Asegura que el contenido se ajuste cuando aparece el teclado
+      appBar: AppBar(backgroundColor: Colors.white70),
+      resizeToAvoidBottomInset: true,
       backgroundColor: Colors.white,
-      body: Column(
-        children: [
-          // Logo aplicación en la parte superior
-          Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Image.asset(
-              'assets/logo.png',
-              height: 100,
-            ),
-          ),
-          // TextField en la parte superior
-          Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: TextField(
-              controller: _controller,
-              decoration: InputDecoration(
-                hintText: 'Nueva lista',
-                hintStyle: TextStyle(fontSize: 20),
-                border: OutlineInputBorder(),
+      body: SafeArea(
+        child: LayoutBuilder(
+          builder: (context, constraints) {
+            return SingleChildScrollView(
+              padding: EdgeInsets.only(
+                bottom: MediaQuery.of(context).viewInsets.bottom,
               ),
-            ),
-          ),
-          Spacer(),
-          // Botón en la parte inferior
-          Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                minimumSize: Size(double.infinity, 50),
-                backgroundColor: Colors.blue, // Color del botón
+              child: ConstrainedBox(
+                constraints: BoxConstraints(
+                  minHeight: constraints.maxHeight,
+                ),
+                child: IntrinsicHeight(
+                  child: Column(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: Image.asset('assets/logo.png', height: 100),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: TextField(
+                          controller: _controller,
+                          decoration: InputDecoration(
+                            hintText: 'Nueva lista',
+                            hintStyle: TextStyle(fontSize: 20),
+                            border: OutlineInputBorder(),
+                          ),
+                        ),
+                      ),
+                      Spacer(),
+                      Padding(
+                        padding: EdgeInsets.all(16.0),
+                        child: ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            minimumSize: Size(double.infinity, 50),
+                            backgroundColor: Colors.blue,
+                          ),
+                          onPressed: () {
+                            String nombreLista = _controller.text;
+                            if (nombreLista.isEmpty) {
+                              nombreLista = "Nueva lista";
+                            }
+                            fireStoreService.addListado(nombreLista);
+                            _controller.clear();
+                            Navigator.pop(context);
+                          },
+                          child: Text(
+                            'Crear',
+                            style: TextStyle(color: Colors.white, fontSize: 28),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
               ),
-              onPressed: () {
-                String nombreLista = _controller.text;
-                if (nombreLista.isEmpty) {
-                  nombreLista = "Nueva lista";
-                }
-                fireStoreService.addListado(nombreLista);
-                _controller.clear(); // Limpiar el campo de texto después de crear la lista
-                Navigator.pop(context);
-              },
-              child: Text('Crear', style: TextStyle(color: Colors.white, fontSize: 28)),
-            ),
-          ),
-        ],
+            );
+          },
+        ),
       ),
     );
   }

@@ -1,6 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:shareshopping/app/pages/authPages/sin_cuenta_page.dart';
+import 'package:ShareShopping/app/pages/authPages/sin_cuenta_page.dart';
 import '../../../core/services/auth_service.dart';
 
 class PerfilUsuarioPage extends StatelessWidget {

@@ -1,6 +1,7 @@
+import "package:ShareShopping/app/pages/mainPages/perfil_usuario_page.dart";
 import "package:firebase_cloud_firestore/firebase_cloud_firestore.dart";
 import "package:flutter/material.dart";
-import "package:shareshopping/core/services/auth_service.dart";
+import "package:ShareShopping/core/services/auth_service.dart";
 import "../../../core/services/listados_fb.dart";
 import 'package:firebase_auth/firebase_auth.dart';
 
@@ -85,10 +86,18 @@ class ListasCompartidasPageState extends State<ListasCompartidasPage> {
             return const Center(child: CircularProgressIndicator());
           }
           if (!snapshot.hasData) {
-            return const Center(
-              child: Text(
-                "Inicia sesión para ver tus listas compartidas",
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
+            return Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  const Icon(Icons.no_accounts, size: 100, color: Colors.black),
+                  const SizedBox(height: 16),
+                  const Text(
+                    "Inicia sesion para ver tus listas compartidas",
+                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
+                  ),
+                ],
               ),
             );
           }

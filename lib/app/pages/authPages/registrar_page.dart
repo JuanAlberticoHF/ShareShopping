@@ -1,7 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:shareshopping/core/services/auth_service.dart';
-import 'package:shareshopping/core/services/usuarios_fb.dart';
+import 'package:ShareShopping/core/services/auth_service.dart';
+import 'package:ShareShopping/core/services/usuarios_fb.dart';
 
 class RegistrarPage extends StatefulWidget {
   const RegistrarPage({super.key});
