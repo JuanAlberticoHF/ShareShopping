@@ -1,4 +1,5 @@
 
+import 'package:ShareShopping/core/services/auth_service.dart';
 import 'package:flutter/material.dart';
 
 import '../../../core/services/listados_service_fb.dart';
@@ -61,7 +62,7 @@ class _PapeleraPageState extends State<PapeleraPage> {
           color: Colors.white70,
           padding: const EdgeInsets.all(5.0),
           child: StreamBuilder (
-              stream: fireStoreServiceListados.getListados(),
+              stream: fireStoreServiceListados.getListadosByCreador(authServiceNotifier.value.currentUser!.uid),
               builder: (context, snapshot) {
                 if (snapshot.hasError) {
                   return Center(
