@@ -65,50 +65,55 @@ class _OpcionesGestionarCompartirState extends State<OpcionesGestionarCompartir>
           backgroundColor: Colors.white,
           onClosing: () {},
           builder: (BuildContext context) {
-            return Padding(
-              padding: EdgeInsets.only(
-                bottom: MediaQuery.of(context).viewInsets.bottom,
-                left: 20,
-                right: 20,
-                top: 20,
-              ),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Container(
-                    width: 150,
-                    height: 5,
-                    decoration: BoxDecoration(
-                      color: Colors.black,
-                      borderRadius: BorderRadius.circular(8),
+            return SafeArea(
+              child: Padding(
+                padding: EdgeInsets.only(
+                  bottom: MediaQuery.of(context).viewInsets.bottom,
+                  left: 20,
+                  right: 20,
+                  top: 20,
+                ),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Container(
+                      width: 150,
+                      height: 5,
+                      decoration: BoxDecoration(
+                        color: Colors.black,
+                        borderRadius: BorderRadius.circular(8),
+                      ),
                     ),
-                  ),
-                  const SizedBox(height: 8),
-                  const Text(
-                    'Usuarios en la lista',
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                  ),
-                  const SizedBox(height: 10),
-                  SizedBox(
-                    height: 72 * 3, // Altura para 3 ListTiles
-                    child: ListView.builder(
-                      shrinkWrap: true,
-                      itemCount: usuarios.length,
-                      itemBuilder: (context, index) {
-                        final usuario = usuarios[index];
-                        return ListTile(
-                          title: Text(usuario['correo'] ?? 'Sin correo'),
-                          trailing: IconButton(
-                            icon: const Icon(Icons.delete, color: Colors.red),
-                            onPressed: () async {
-                              await eliminarUsuarioDeListado(usuario.id);
-                            },
-                          ),
-                        );
-                      },
+                    const SizedBox(height: 8),
+                    const Text(
+                      'Usuarios en la lista',
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
-                  ),
-                ],
+                    const SizedBox(height: 10),
+                    SizedBox(
+                      height: 72 * 3, // Altura para 3 ListTiles
+                      child: ListView.builder(
+                        shrinkWrap: true,
+                        itemCount: usuarios.length,
+                        itemBuilder: (context, index) {
+                          final usuario = usuarios[index];
+                          return ListTile(
+                            title: Text(usuario['correo'] ?? 'Sin correo'),
+                            trailing: IconButton(
+                              icon: const Icon(Icons.delete, color: Colors.red),
+                              onPressed: () async {
+                                await eliminarUsuarioDeListado(usuario.id);
+                              },
+                            ),
+                          );
+                        },
+                      ),
+                    ),
+                  ],
+                ),
               ),
             );
           },

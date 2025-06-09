@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
-import 'package:shareshopping/app/pages/operationPages/articulos_listas_page.dart';
-import 'package:shareshopping/app/widgets/bottonsheet_compartir.dart';
+import 'package:ShareShopping/app/pages/operationPages/articulos_listas_page.dart';
+import 'package:ShareShopping/app/widgets/bottonsheet_compartir.dart';
 
 import '../../core/services/listados_fb.dart';
 import 'bottonsheet_listado.dart';
@@ -76,9 +76,11 @@ class ElementosListas extends StatelessWidget {
                 onPressed: (context) {
                   showModalBottomSheet(
                     context: context,
-                    builder: (context) {
-                      return CompartirLista(idLista: id, nombreLista: nombre,);
-                    },
+                    isScrollControlled: true, // Esto permite que el BottomSheet se ajuste al teclado
+                    builder: (context) => CompartirLista(
+                      idLista: id,
+                      nombreLista: nombre,
+                    ),
                   );
                 },
                 backgroundColor: Colors.green,

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:shareshopping/app/pages/mainPages/perfil_usuario_page.dart';
+import 'package:ShareShopping/app/pages/mainPages/perfil_usuario_page.dart';
 import 'app/pages/mainPages/listas_compartidas_page.dart';
 import 'app/pages/mainPages/mis_listas_page.dart';
 import 'data/sources/firebase_options.dart';
