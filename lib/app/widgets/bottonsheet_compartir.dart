@@ -3,14 +3,24 @@ import 'package:ShareShopping/core/services/usuarios_service_fb.dart';
 
 import '../../core/services/listados_service_fb.dart';
 
+/// Widget para compartir una lista con otros usuarios
 class CompartirLista extends StatelessWidget {
-  final String idLista;
-  final String nombreLista;
-  final TextEditingController emailController = TextEditingController();
-  final FireStoreServiceUsuarios fireStoreServiceUsers = FireStoreServiceUsuarios();
-  final FireStoreServiceListados fireStoreService = FireStoreServiceListados();
+  final String _idLista; // Identificador de la lista
 
-  CompartirLista({super.key, required this.idLista, required this.nombreLista});
+  CompartirLista({
+    super.key,
+    required String idLista,
+    required String nombreLista
+  }) : _idLista = idLista;
+
+  /// Servicio para interactuar con la coleccion 'usuarios' en Firestore
+  final FireStoreServiceUsuarios _fireStoreServiceUsuarios = FireStoreServiceUsuarios();
+
+  /// Servicio para interactuar con la coleccion 'listados' en Firestore
+  final FireStoreServiceListados _fireStoreServiceListados = FireStoreServiceListados();
+
+  // Controlador de texto para el campo de correo electrónico
+  final TextEditingController _emailController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -52,7 +62,7 @@ class CompartirLista extends StatelessWidget {
                   ),
                   SizedBox(height: 15),
                   TextField(
-                    controller: emailController,
+                    controller: _emailController,
                     decoration: InputDecoration(
                       hintText: 'Correo electrónico',
                       border: OutlineInputBorder(
@@ -63,12 +73,12 @@ class CompartirLista extends StatelessWidget {
                   SizedBox(height: 15),
                   ElevatedButton(
                     onPressed: () async {
-                      final email = emailController.text.trim();
+                      final email = _emailController.text.trim();
                       if (email.isNotEmpty) {
-                        final uid = await fireStoreServiceUsers
+                        final uid = await _fireStoreServiceUsuarios
                             .getUidByCorreo(email);
-                        if (await fireStoreService.existsUidCompartido(
-                          idLista,
+                        if (await _fireStoreServiceListados.existsUidCompartido(
+                          _idLista,
                           uid,
                         )) {
                           ScaffoldMessenger.of(context).showSnackBar(
@@ -78,8 +88,8 @@ class CompartirLista extends StatelessWidget {
                               ),
                             ),
                           );
-                        } else if (await fireStoreService.isUidCreador(
-                          idLista,
+                        } else if (await _fireStoreServiceListados.isUidCreador(
+                          _idLista,
                           uid,
                         )) {
                           ScaffoldMessenger.of(context).showSnackBar(
@@ -91,10 +101,8 @@ class CompartirLista extends StatelessWidget {
                           );
                           return;
                         } else {
-                          await fireStoreService.updateListadoCompartidosAdd(
-                            idLista,
-                            uid,
-                          );
+                          await _fireStoreServiceListados
+                              .updateListadoCompartidosAdd(_idLista, uid);
                           ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(
                               content: Text('Lista compartida con $email'),

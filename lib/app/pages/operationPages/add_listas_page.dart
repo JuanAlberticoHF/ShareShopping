@@ -2,11 +2,14 @@ import 'package:flutter/material.dart';
 
 import '../../../core/services/listados_service_fb.dart';
 
+/// Página para añadir nuevas listas
 class AddListasPage extends StatelessWidget {
   AddListasPage({super.key});
 
-  final TextEditingController _controller = TextEditingController();
-  final FireStoreServiceListados fireStoreService = FireStoreServiceListados();
+  /// Servicio para interactuar con la coleccion 'listados' en Firestore
+  final FireStoreServiceListados _fireStoreServiceListados = FireStoreServiceListados();
+
+  final TextEditingController _controller = TextEditingController(); // Controlador de texto para el campo de entrada del nombre de la lista
 
   @override
   Widget build(BuildContext context) {
@@ -54,9 +57,9 @@ class AddListasPage extends StatelessWidget {
                           onPressed: () {
                             String nombreLista = _controller.text;
                             if (nombreLista.isEmpty) {
-                              nombreLista = "Nueva lista";
+                              nombreLista = "Nueva lista"; // Nombre por defecto si no se ingresa nada
                             }
-                            fireStoreService.addListado(nombreLista);
+                            _fireStoreServiceListados.addListado(nombreLista);
                             _controller.clear();
                             Navigator.pop(context);
                           },

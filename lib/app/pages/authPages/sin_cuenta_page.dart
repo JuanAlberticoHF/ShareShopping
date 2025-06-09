@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:ShareShopping/app/pages/authPages/registrar_page.dart';
 import 'iniciar_sesion_page.dart';
 
+/// Página que muestra un mensaje cuando el usuario no ha iniciado sesión.
+/// Esta página invita al usuario a iniciar sesión o registrarse.
 class SinCuentaPage extends StatelessWidget {
   const SinCuentaPage({super.key});
 

@@ -4,19 +4,21 @@ import 'package:flutter/material.dart';
 import '../../../core/services/listados_service_fb.dart';
 import '../../widgets/elemento_listados_papelera.dart';
 
+/// Página que muestra las listas en la papelera ('operativo' = false)
 class PapeleraPage extends StatefulWidget {
   const PapeleraPage({super.key});
 
   @override
-  State<PapeleraPage> createState() => PapeleraPageState();
+  State<PapeleraPage> createState() => _PapeleraPageState();
 }
 
-class PapeleraPageState extends State<PapeleraPage> {
+class _PapeleraPageState extends State<PapeleraPage> {
+  /// Servicio para interactuar con la coleccion 'listados' en Firestore
+  FireStoreServiceListados fireStoreServiceListados = FireStoreServiceListados();
 
-  FireStoreServiceListados fireStoreService = FireStoreServiceListados();
-  bool _isSearching = false;
-  final TextEditingController _searchController = TextEditingController();
-  String _searchText = "";
+  bool _isSearching = false; // Controla el estado de búsqueda
+  final TextEditingController _searchController = TextEditingController(); // Controlador de texto para la búsqueda
+  String _searchText = ""; // Texto de búsqueda
 
   @override
   Widget build(BuildContext context) {
@@ -59,7 +61,7 @@ class PapeleraPageState extends State<PapeleraPage> {
           color: Colors.white70,
           padding: const EdgeInsets.all(5.0),
           child: StreamBuilder (
-              stream: fireStoreService.getListados(),
+              stream: fireStoreServiceListados.getListados(),
               builder: (context, snapshot) {
                 if (snapshot.hasError) {
                   return Center(
@@ -97,15 +99,13 @@ class PapeleraPageState extends State<PapeleraPage> {
                       if (art['check'] == true) articulosMarcados++;
                     }
                     final textoProgreso = "$articulosMarcados/$cantidadArticulos";
-                    double valorProgreso = cantidadArticulos > 0 ? articulosMarcados / cantidadArticulos : 0;
 
                     return ElementosListasPapelera(
                       id: listado.id,
                       nombre: listado['nombre'],
-                      progreso: valorProgreso,
                       itemsText: textoProgreso,
                       onDelete: () {
-                        fireStoreService.deleteListado(listado.id);
+                        fireStoreServiceListados.deleteListado(listado.id);
                       },
                     );
                   },

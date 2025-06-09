@@ -7,23 +7,25 @@ import '../../core/services/listados_service_fb.dart';
 import 'bottonsheet_listado.dart';
 import 'editar_nombre_dialog.dart';
 
+/// Widget que representa un elemento de una lista del usuario
 class ElementosListas extends StatelessWidget {
-  final String id; // Identificador
-  final String nombre; // Título
-  final double progreso; // Progreso
-  final String itemsText; // Elementos "X/Y"// Callback para eliminar el elemento
-  final VoidCallback? onDelete;
+  final String _id; // Identificador
+  final String _nombre; // Título
+  final double _progreso; // Progreso
+  final String _itemsText; // Elementos "X/Y"// Callback para eliminar el elemento
+  final VoidCallback? _onDelete; // Call
 
   ElementosListas({
     super.key,
-    required this.id,
-    required this.nombre,
-    required this.progreso,
-    required this.itemsText,
-    this.onDelete,
-  });
+    required String id,
+    required String nombre,
+    required double progreso,
+    required String itemsText,
+    void Function()? onDelete,
+  }) : _onDelete = onDelete, _itemsText = itemsText, _progreso = progreso, _nombre = nombre, _id = id;
 
-  FireStoreServiceListados fireStoreService = FireStoreServiceListados();
+  /// Servicio para interactuar con la coleccion 'listados' en Firestore
+  final FireStoreServiceListados _fireStoreServiceListados = FireStoreServiceListados();
 
   @override
   Widget build(BuildContext context) {
@@ -33,9 +35,9 @@ class ElementosListas extends StatelessWidget {
           context,
           MaterialPageRoute(
             builder: (context) => ArticulosListasPage(
-                listaId: id,
-                progress: progreso,
-                nombreLista: nombre,
+                listaId: _id,
+                progress: _progreso,
+                nombreLista: _nombre,
             ),
           ),
         );
@@ -47,12 +49,12 @@ class ElementosListas extends StatelessWidget {
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
         // Tarjeta que contiene el Slidable
         child: Slidable(
-          key: ValueKey(id), // Clave única para el Slidable
+          key: ValueKey(_id), // Clave única para el Slidable
           endActionPane: ActionPane( // Deslizar hacia la izquierda para mostrar acciones
             motion: const ScrollMotion(), // Animación de deslizamiento
             dismissible: DismissiblePane(onDismissed: () {
-              if (onDelete != null) {
-                onDelete!(); // Llama al callback para eliminar el elemento
+              if (_onDelete != null) {
+                _onDelete!(); // Llama al callback para eliminar el elemento
               }
             }),
             children: [ // Widgets de acciones (Slidable Actions)
@@ -61,9 +63,9 @@ class ElementosListas extends StatelessWidget {
                 onPressed: (context) {
                   EditarNombreDialog.show(
                     context,
-                    nombreInicial: nombre,
+                    nombreInicial: _nombre,
                     onSave: (nuevoNombre) {
-                      fireStoreService.updateListadoName(id, nuevoNombre);
+                      _fireStoreServiceListados.updateListadoName(_id, nuevoNombre);
                     },
                   );
                 },
@@ -78,8 +80,8 @@ class ElementosListas extends StatelessWidget {
                     context: context,
                     isScrollControlled: true, // Esto permite que el BottomSheet se ajuste al teclado
                     builder: (context) => CompartirLista(
-                      idLista: id,
-                      nombreLista: nombre,
+                      idLista: _id,
+                      nombreLista: _nombre,
                     ),
                   );
                 },
@@ -90,8 +92,8 @@ class ElementosListas extends StatelessWidget {
               SlidableAction(
                 //-- Accion Eliminar
                 onPressed: (context) {
-                  if (onDelete != null) {
-                    onDelete!(); // Llama al callback para eliminar el elemento
+                  if (_onDelete != null) {
+                    _onDelete!(); // Llama al callback para eliminar el elemento
                   }
                 },
                 backgroundColor: Colors.red,
@@ -110,7 +112,7 @@ class ElementosListas extends StatelessWidget {
                   children: [
                     //-- Título de la lista
                     Text(
-                      nombre,
+                      _nombre,
                       style: const TextStyle(fontSize: 24),
                     ),
                     //-- Botón de opciones
@@ -120,7 +122,7 @@ class ElementosListas extends StatelessWidget {
                         showModalBottomSheet(
                           context: context,
                           builder: (context) {
-                            return OpcionesListado(idLista: id, nombreLista: nombre,);
+                            return OpcionesListado(idLista: _id, nombreLista: _nombre,);
                           },
                         );
                       },
@@ -130,7 +132,7 @@ class ElementosListas extends StatelessWidget {
               ),
               Center(
                 child: Text(
-                  itemsText,
+                  _itemsText,
                   style: const TextStyle(fontSize: 20),
                 ),
               ),
@@ -139,10 +141,10 @@ class ElementosListas extends StatelessWidget {
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(10),
                   child: LinearProgressIndicator(
-                    value: progreso,
+                    value: _progreso,
                     minHeight: 10,
                     backgroundColor: Colors.grey.shade300,
-                    valueColor: AlwaysStoppedAnimation<Color>(colorBaseProgreso(progreso)),
+                    valueColor: AlwaysStoppedAnimation<Color>(colorBaseProgreso(_progreso)),
                   ),
                 ),
               ),

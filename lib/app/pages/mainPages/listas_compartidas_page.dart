@@ -1,4 +1,4 @@
-import "package:ShareShopping/app/pages/mainPages/perfil_usuario_page.dart";
+
 import "package:firebase_cloud_firestore/firebase_cloud_firestore.dart";
 import "package:flutter/material.dart";
 import "package:ShareShopping/core/services/auth_service.dart";
@@ -11,14 +11,16 @@ class ListasCompartidasPage extends StatefulWidget {
   const ListasCompartidasPage({super.key});
 
   @override
-  State<ListasCompartidasPage> createState() => ListasCompartidasPageState();
+  State<ListasCompartidasPage> createState() => _ListasCompartidasPageState();
 }
 
-class ListasCompartidasPageState extends State<ListasCompartidasPage> {
-  final FireStoreServiceListados fireStoreService = FireStoreServiceListados();
-  bool _isSearching = false;
-  final TextEditingController _searchController = TextEditingController();
-  String _searchText = "";
+class _ListasCompartidasPageState extends State<ListasCompartidasPage> {
+  /// Servicio para interactuar con la coleccion 'listados' en Firestore
+  final FireStoreServiceListados _fireStoreServiceListados = FireStoreServiceListados();
+
+  bool _isSearching = false; // Controla el estado de búsqueda
+  final TextEditingController _searchController = TextEditingController(); // Controlador de texto para la búsqueda
+  String _searchText = ""; // Texto de búsqueda
 
   Widget sinDatos() {
     return const Center(
@@ -104,7 +106,7 @@ class ListasCompartidasPageState extends State<ListasCompartidasPage> {
           final String uidUsuarioActivo = snapshot.data!.uid;
           return StreamBuilder<List<QueryDocumentSnapshot>>(
             key: ValueKey(uidUsuarioActivo),
-            stream: fireStoreService
+            stream: _fireStoreServiceListados
                 .getListadosByCompartidos(uidUsuarioActivo)
                 .map((snapshot) => snapshot.docs),
             builder: (context, snapshotListas) {
@@ -146,7 +148,7 @@ class ListasCompartidasPageState extends State<ListasCompartidasPage> {
                     progreso: valorProgreso,
                     itemsText: textoProgreso,
                     onLeave: () {
-                      fireStoreService.updateListadoCompartidosRemove(listado.id, uidUsuarioActivo);
+                      _fireStoreServiceListados.updateListadoCompartidosRemove(listado.id, uidUsuarioActivo);
                     },
                   );
                 },

@@ -1,10 +1,11 @@
-
 import 'package:firebase_cloud_firestore/firebase_cloud_firestore.dart';
 
 /// Service para gestionar usuarios en FireStore Database
 class FireStoreServiceUsuarios {
   /// Referencia a la colección `usuarios` en Firestore
-  final CollectionReference dbUsuarios = FirebaseFirestore.instance.collection('usuarios');
+  final CollectionReference dbUsuarios = FirebaseFirestore.instance.collection(
+    'usuarios',
+  );
 
   /// Agrega un nuevo usuario a la colección `usuarios` en Firestore.
   ///
@@ -19,7 +20,9 @@ class FireStoreServiceUsuarios {
       'fecha_creacion': Timestamp.fromDate(DateTime.now()),
       'fecha_modificacion': Timestamp.fromDate(DateTime.now()),
     };
-    await dbUsuarios.doc(uid).set(usuarioObj); // Utiliza el UID como ID del documento
+    await dbUsuarios
+        .doc(uid)
+        .set(usuarioObj); // Utiliza el UID como ID del documento
   }
 
   /// Stream para obtener actualizaciones en tiempo real de la colección `usuarios`.
@@ -39,16 +42,16 @@ class FireStoreServiceUsuarios {
   ///
   /// Lanza una excepción si no se encuentra ningún usuario con ese correo.
   Future<String> getUidByCorreo(String correo) {
-    return dbUsuarios
-        .where('correo', isEqualTo: correo)
-        .get()
-        .then((snapshot) {
-          if (snapshot.docs.isNotEmpty) {
-            return snapshot.docs.first.id; // Retorna el UID del primer documento encontrado
-          } else {
-            throw Exception('No se encontró ningún usuario con ese correo');
-          }
-        });
+    return dbUsuarios.where('correo', isEqualTo: correo).get().then((snapshot) {
+      if (snapshot.docs.isNotEmpty) {
+        return snapshot
+            .docs
+            .first
+            .id; // Retorna el UID del primer documento encontrado
+      } else {
+        throw Exception('No se encontró ningún usuario con ese correo');
+      }
+    });
   }
 
   /// Devuelve el correo electrónico de un usuario dado su UID.
@@ -58,15 +61,14 @@ class FireStoreServiceUsuarios {
   ///
   /// Lanza una excepción si no se encuentra ningún usuario con ese UID.
   Future<String> getCorreoByUid(String uid) {
-    return dbUsuarios
-        .where('uid', isEqualTo: uid)
-        .get()
-        .then((snapshot) {
-          if (snapshot.docs.isNotEmpty) {
-            return snapshot.docs.first['correo']; // Retorna el correo del primer documento encontrado
-          } else {
-            throw Exception('No se encontró ningún usuario con ese UID');
-          }
-        });
+    return dbUsuarios.where('uid', isEqualTo: uid).get().then((snapshot) {
+      if (snapshot.docs.isNotEmpty) {
+        return snapshot
+            .docs
+            .first['correo']; // Retorna el correo del primer documento encontrado
+      } else {
+        throw Exception('No se encontró ningún usuario con ese UID');
+      }
+    });
   }
 }

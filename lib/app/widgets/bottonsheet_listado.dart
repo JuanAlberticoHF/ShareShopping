@@ -4,12 +4,19 @@ import 'package:ShareShopping/core/services/listados_service_fb.dart';
 import 'bottonsheet_compartir.dart';
 import 'editar_nombre_dialog.dart';
 
+/// Widget que representa las opciones de un listado del usuario (editar, compartir, eliminar)
 class OpcionesListado extends StatelessWidget {
-  OpcionesListado({super.key, required this.idLista,required this.nombreLista});
+  final String _idLista; // Identificador de la lista
+  final String _nombreLista; // Nombre de la lista
 
-  final String idLista;
-  final FireStoreServiceListados fireStoreService = FireStoreServiceListados();
-  final String nombreLista;
+  OpcionesListado({
+    super.key,
+    required String idLista,
+    required String nombreLista,
+  }) : _nombreLista = nombreLista, _idLista = idLista;
+
+  /// Servicio para interactuar con la coleccion 'listados' en Firestore
+  final FireStoreServiceListados _fireStoreServiceListados = FireStoreServiceListados();
 
   @override
   Widget build(BuildContext context) {
@@ -35,6 +42,7 @@ class OpcionesListado extends StatelessWidget {
                   "Opciones",
                   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 22),
                 ),
+                // ACCION EDITAR
                 ListTile(
                   leading: const Icon(Icons.edit, color: Colors.blue),
                   title: const Text('Editar'),
@@ -42,16 +50,17 @@ class OpcionesListado extends StatelessWidget {
                     Navigator.pop(context);
                     EditarNombreDialog.show(
                       context,
-                      nombreInicial: nombreLista,
+                      nombreInicial: _nombreLista,
                       onSave: (nuevoNombre) {
-                        fireStoreService.updateListadoName(
-                          idLista,
+                        _fireStoreServiceListados.updateListadoName(
+                          _idLista,
                           nuevoNombre,
                         );
                       },
                     );
                   },
                 ),
+                // ACCION COMPARTIR
                 ListTile(
                   leading: const Icon(Icons.person_add, color: Colors.green),
                   title: const Text('Compartir'),
@@ -62,17 +71,18 @@ class OpcionesListado extends StatelessWidget {
                       isScrollControlled:
                           true, // Esto permite que el BottomSheet se ajuste al teclado
                       builder: (context) => CompartirLista(
-                        idLista: idLista,
-                        nombreLista: nombreLista,
+                        idLista: _idLista,
+                        nombreLista: _nombreLista,
                       ),
                     );
                   },
                 ),
+                // ACCION ELIMINAR
                 ListTile(
                   leading: const Icon(Icons.delete, color: Colors.red),
                   title: const Text('Eliminar'),
                   onTap: () {
-                    fireStoreService.updateListadoOperativo(idLista, false);
+                    _fireStoreServiceListados.updateListadoOperativo(_idLista, false);
                     Navigator.pop(context);
                   },
                 ),
