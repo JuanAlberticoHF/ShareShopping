@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../core/services/listados_fb.dart';
+import '../../core/services/listados_service_fb.dart';
 
 class ElementosListasPapelera extends StatelessWidget {
   final String id; // Identificador
@@ -18,7 +18,7 @@ class ElementosListasPapelera extends StatelessWidget {
     this.onDelete,
   });
 
-  FireStoreService fireStoreService = FireStoreService();
+  FireStoreServiceListados fireStoreService = FireStoreServiceListados();
 
   @override
   Widget build(BuildContext context) {

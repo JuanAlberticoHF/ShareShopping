@@ -3,7 +3,7 @@ import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:ShareShopping/app/pages/operationPages/articulos_listas_page.dart';
 import 'package:ShareShopping/app/widgets/bottonsheet_compartir.dart';
 
-import '../../core/services/listados_fb.dart';
+import '../../core/services/listados_service_fb.dart';
 import 'bottonsheet_gestionar_compartir.dart';
 import 'bottonsheet_listado.dart';
 import 'editar_nombre_dialog.dart';
@@ -24,7 +24,7 @@ class ElementosListasCompartidasCreador extends StatelessWidget {
     this.onDelete,
   });
 
-  FireStoreService fireStoreService = FireStoreService();
+  FireStoreServiceListados fireStoreService = FireStoreServiceListados();
 
   @override
   Widget build(BuildContext context) {

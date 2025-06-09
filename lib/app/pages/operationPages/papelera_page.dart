@@ -1,7 +1,7 @@
 
 import 'package:flutter/material.dart';
 
-import '../../../core/services/listados_fb.dart';
+import '../../../core/services/listados_service_fb.dart';
 import '../../widgets/elemento_listados_papelera.dart';
 
 class PapeleraPage extends StatefulWidget {
@@ -13,7 +13,7 @@ class PapeleraPage extends StatefulWidget {
 
 class PapeleraPageState extends State<PapeleraPage> {
 
-  FireStoreService fireStoreService = FireStoreService();
+  FireStoreServiceListados fireStoreService = FireStoreServiceListados();
   bool _isSearching = false;
   final TextEditingController _searchController = TextEditingController();
   String _searchText = "";

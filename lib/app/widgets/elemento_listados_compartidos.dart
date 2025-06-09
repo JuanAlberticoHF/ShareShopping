@@ -3,7 +3,7 @@ import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:ShareShopping/app/pages/operationPages/articulos_listas_page.dart';
 import 'package:ShareShopping/app/widgets/bottonsheet_listado_salir.dart';
 
-import '../../core/services/listados_fb.dart';
+import '../../core/services/listados_service_fb.dart';
 import 'bottonsheet_visualizar_compartir.dart';
 
 class ElementosListasCompartidas extends StatelessWidget {
@@ -22,7 +22,7 @@ class ElementosListasCompartidas extends StatelessWidget {
     this.onLeave,
   });
 
-  FireStoreService fireStoreService = FireStoreService();
+  FireStoreServiceListados fireStoreService = FireStoreServiceListados();
 
   @override
   Widget build(BuildContext context) {

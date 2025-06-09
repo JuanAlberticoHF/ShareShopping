@@ -2,7 +2,7 @@
 import "package:flutter/material.dart";
 import "package:ShareShopping/app/pages/operationPages/papelera_page.dart";
 import "package:ShareShopping/core/services/auth_service.dart";
-import "../../../core/services/listados_fb.dart";
+import "../../../core/services/listados_service_fb.dart";
 import "../../widgets/elemento_listados.dart";
 import "../../widgets/elemento_listados_compartidos_creador.dart";
 import "../operationPages/add_listas_page.dart";
@@ -16,7 +16,7 @@ class ListasUsuarioPage extends StatefulWidget {
 }
 
 class ListasUsuarioPageState extends State<ListasUsuarioPage> {
-  final FireStoreService fireStoreService = FireStoreService();
+  final FireStoreServiceListados fireStoreService = FireStoreServiceListados();
   bool _isSearching = false;
   final TextEditingController _searchController = TextEditingController();
   String _searchText = "";

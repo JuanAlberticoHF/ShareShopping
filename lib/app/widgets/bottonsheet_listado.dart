@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:ShareShopping/core/services/listados_fb.dart';
+import 'package:ShareShopping/core/services/listados_service_fb.dart';
 
 import 'bottonsheet_compartir.dart';
 import 'editar_nombre_dialog.dart';
@@ -8,7 +8,7 @@ class OpcionesListado extends StatelessWidget {
   OpcionesListado({super.key, required this.idLista,required this.nombreLista});
 
   final String idLista;
-  final FireStoreService fireStoreService = FireStoreService();
+  final FireStoreServiceListados fireStoreService = FireStoreServiceListados();
   final String nombreLista;
 
   @override
