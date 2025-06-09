@@ -8,18 +8,21 @@ import "../../widgets/elemento_listados_compartidos_creador.dart";
 import "../operationPages/add_listas_page.dart";
 import 'package:firebase_auth/firebase_auth.dart';
 
+/// Página que muestra las listas del usuario autenticado
 class ListasUsuarioPage extends StatefulWidget {
   const ListasUsuarioPage({super.key});
 
   @override
-  State<ListasUsuarioPage> createState() => ListasUsuarioPageState();
+  State<ListasUsuarioPage> createState() => _ListasUsuarioPageState();
 }
 
-class ListasUsuarioPageState extends State<ListasUsuarioPage> {
-  final FireStoreServiceListados fireStoreService = FireStoreServiceListados();
-  bool _isSearching = false;
-  final TextEditingController _searchController = TextEditingController();
-  String _searchText = "";
+class _ListasUsuarioPageState extends State<ListasUsuarioPage> {
+  /// Servicio para interactuar con la coleccion 'listados' en Firestore
+  final FireStoreServiceListados _fireStoreServiceListados = FireStoreServiceListados();
+
+  bool _isSearching = false; // Controla el estado de búsqueda
+  final TextEditingController _searchController = TextEditingController(); // Controlador de texto para la búsqueda
+  String _searchText = ""; // Texto de búsqueda
 
   Widget sinDatos() {
     return const Center(
@@ -157,7 +160,7 @@ class ListasUsuarioPageState extends State<ListasUsuarioPage> {
           final String uidUsuarioActivo = snapshot.data!.uid;
           return StreamBuilder(
             key: ValueKey(uidUsuarioActivo),
-            stream: fireStoreService.getListadosByCreador(uidUsuarioActivo),
+            stream: _fireStoreServiceListados.getListadosByCreador(uidUsuarioActivo),
             builder: (context, snapshotListas) {
               if (snapshotListas.connectionState == ConnectionState.waiting) {
                 return const Center(child: CircularProgressIndicator());
@@ -203,7 +206,7 @@ class ListasUsuarioPageState extends State<ListasUsuarioPage> {
                       progreso: valorProgreso,
                       itemsText: textoProgreso,
                       onDelete: () {
-                        fireStoreService.updateListadoOperativo(listado.id, false);
+                        _fireStoreServiceListados.updateListadoOperativo(listado.id, false);
                       },
                     );
                   } else {
@@ -213,7 +216,7 @@ class ListasUsuarioPageState extends State<ListasUsuarioPage> {
                       progreso: valorProgreso,
                       itemsText: textoProgreso,
                       onDelete: () {
-                        fireStoreService.updateListadoOperativo(listado.id, false);
+                        _fireStoreServiceListados.updateListadoOperativo(listado.id, false);
                       },
                     );
                   }

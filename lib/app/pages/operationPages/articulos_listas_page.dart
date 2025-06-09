@@ -3,40 +3,41 @@ import 'package:flutter/material.dart';
 
 import '../../../core/services/listados_service_fb.dart'; // Servicio de Firestore
 
+/// Página que muestra los artículos de una lista específica
 class ArticulosListasPage extends StatefulWidget {
-  final String listaId; // ID del listado
-  final double progress; // Progreso inicial
-  final String nombreLista; // Nombre del listado
+  final String _listaId; // Identificador de la lista
+  final double _progress; // Progreso inicial
+  final String _nombreLista; // Nombre del listado
 
   const ArticulosListasPage({
     super.key,
-    required this.listaId,
-    required this.progress,
-    required this.nombreLista,
-  });
+    required String listaId,
+    required double progress,
+    required String nombreLista,
+  }) : _nombreLista = nombreLista, _progress = progress, _listaId = listaId;
 
   @override
   State<ArticulosListasPage> createState() => _ArticulosListasPageState();
 }
 
 class _ArticulosListasPageState extends State<ArticulosListasPage> {
-  // Variables de la pagina
-  final FireStoreServiceListados fireStoreService = FireStoreServiceListados(); // Servicio de Firestore
-  final TextEditingController _controller = TextEditingController();
-  late double progressValue; // Valor del progreso
+  /// Servicio para interactuar con la coleccion 'listados' en Firestore
+  final FireStoreServiceListados _fireStoreServiceListados = FireStoreServiceListados();
 
-  // Al inicio inicializamos el progreso del los articulos marcados
+  final TextEditingController _controller = TextEditingController(); // Controlador de texto para añadir artículos
+  late double _progressValue; // Valor del progreso
+
   @override
   void initState() {
     super.initState();
-    progressValue = widget.progress;
+    _progressValue = widget._progress; // Inicializa el progreso con el valor pasado
   }
   /// Agrega un nuevo artículo a la lista.
   void _agregarArticulo() async {
     final nombre = _controller.text.trim();
     if (nombre.isEmpty) return;
 
-    final doc = await fireStoreService.getListadoById(widget.listaId);
+    final doc = await _fireStoreServiceListados.getListadoById(widget._listaId);
     final data = doc.data()?.asMap();
 
     if (data != null && data.containsKey('articulos')) {
@@ -47,36 +48,38 @@ class _ArticulosListasPageState extends State<ArticulosListasPage> {
         'cantidad': 1,
       });
 
-      fireStoreService.updateListado(widget.listaId, articulos);
-      recalcularProgreso(articulos); // TODO: No suma bien
+      _fireStoreServiceListados.updateListado(widget._listaId, articulos);
+      _recalcularProgreso(articulos); // TODO: No suma bien
     }
 
     _controller.clear();
   }
 
-  /// Recalcula el progreso de los artículos marcados en la lista.
-  void recalcularProgreso(List<dynamic> articulos) {
+  /// Recalcula el progreso de los artículos marcados en la lista. Para ello
+  /// cuenta el número de artículos marcados como 'check' y los divide por el
+  /// total de artículos.
+  ///
+  /// Parámetros:
+  /// - [articulos]: Lista de artículos.
+  void _recalcularProgreso(List<dynamic> articulos) {
     final total = articulos.length;
     if (total == 0) {
       setState(() {
-        progressValue = 0.0;
+        _progressValue = 0.0;
       });
       return;
     }
     final marcados = articulos.where((a) => a['check'] == true).length;
     setState(() {
-      progressValue = marcados / total;
+      _progressValue = marcados / total;
     });
   }
 
-  /*
-  * WIDGET
-  */
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.nombreLista),
+        title: Text(widget._nombreLista),
         backgroundColor: Colors.white70,
       ),
       backgroundColor: Colors.white,
@@ -119,12 +122,12 @@ class _ArticulosListasPageState extends State<ArticulosListasPage> {
           LinearProgressIndicator(
             color: Colors.green,
             backgroundColor: Colors.grey[200],
-            value: progressValue,
+            value: _progressValue,
           ),
           // Listado de artículos
           Expanded(
             child: StreamBuilder<DocumentSnapshot>(
-              stream: fireStoreService.getListadoStreamById(widget.listaId),
+              stream: _fireStoreServiceListados.getListadoStreamById(widget._listaId),
               builder: (context, snapshot) {
                 if (snapshot.hasError) {
                   return Center(child: Text("Error: ${snapshot.error}"));
@@ -156,11 +159,11 @@ class _ArticulosListasPageState extends State<ArticulosListasPage> {
                         List<dynamic> nuevosArticulos = List.from(articulos)
                           ..removeAt(index);
                         try {
-                          await fireStoreService.updateListado(
-                            widget.listaId,
+                          await _fireStoreServiceListados.updateListado(
+                            widget._listaId,
                             nuevosArticulos,
                           );
-                          recalcularProgreso(nuevosArticulos);
+                          _recalcularProgreso(nuevosArticulos);
                         } catch (e) {
                           ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(
@@ -185,18 +188,18 @@ class _ArticulosListasPageState extends State<ArticulosListasPage> {
                                     ...articulo,
                                     'cantidad': cantidad - 1,
                                   };
-                                  await fireStoreService.updateListado(
-                                    widget.listaId,
+                                  await _fireStoreServiceListados.updateListado(
+                                    widget._listaId,
                                     nuevosArticulos,
                                   );
-                                  recalcularProgreso(nuevosArticulos);
+                                  _recalcularProgreso(nuevosArticulos);
                                 } else {
                                   List<dynamic> nuevosArticulos = List.from(articulos)..removeAt(index);
-                                  await fireStoreService.updateListado(
-                                    widget.listaId,
+                                  await _fireStoreServiceListados.updateListado(
+                                    widget._listaId,
                                     nuevosArticulos,
                                   );
-                                  recalcularProgreso(nuevosArticulos);
+                                  _recalcularProgreso(nuevosArticulos);
                                 }
                               },
                               visualDensity: VisualDensity(horizontal: -4, vertical: -4),
@@ -212,11 +215,11 @@ class _ArticulosListasPageState extends State<ArticulosListasPage> {
                                   ...articulo,
                                   'cantidad': cantidad + 1,
                                 };
-                                await fireStoreService.updateListado(
-                                  widget.listaId,
+                                await _fireStoreServiceListados.updateListado(
+                                  widget._listaId,
                                   nuevosArticulos,
                                 );
-                                recalcularProgreso(nuevosArticulos);
+                                _recalcularProgreso(nuevosArticulos);
                               },
                               visualDensity: VisualDensity(horizontal: -4, vertical: -4),
                               constraints: BoxConstraints(minWidth: 24, minHeight: 24),
@@ -234,11 +237,11 @@ class _ArticulosListasPageState extends State<ArticulosListasPage> {
                               ...articulo,
                               'check': nuevoValor,
                             };
-                            fireStoreService.updateListado(
-                              widget.listaId,
+                            _fireStoreServiceListados.updateListado(
+                              widget._listaId,
                               nuevosArticulos,
                             );
-                            recalcularProgreso(nuevosArticulos);
+                            _recalcularProgreso(nuevosArticulos);
                           },
                         ),
                         title: Text(
@@ -255,11 +258,11 @@ class _ArticulosListasPageState extends State<ArticulosListasPage> {
                             ...articulo,
                             'check': !check,
                           };
-                          fireStoreService.updateListado(
-                            widget.listaId,
+                          _fireStoreServiceListados.updateListado(
+                            widget._listaId,
                             nuevosArticulos,
                           );
-                          recalcularProgreso(nuevosArticulos);
+                          _recalcularProgreso(nuevosArticulos);
                         },
                       ),
                     );

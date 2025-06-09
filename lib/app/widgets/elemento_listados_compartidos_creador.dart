@@ -8,23 +8,25 @@ import 'bottonsheet_gestionar_compartir.dart';
 import 'bottonsheet_listado.dart';
 import 'editar_nombre_dialog.dart';
 
+/// Widget que representa un elemento de una lista compartida creada por el usuario
 class ElementosListasCompartidasCreador extends StatelessWidget {
-  final String id; // Identificador
-  final String nombre; // Título
-  final double progreso; // Progreso
-  final String itemsText; // Elementos "X/Y"// Callback para eliminar el elemento
-  final VoidCallback? onDelete;
+  final String _id; // Identificador
+  final String _nombre; // Título
+  final double _progreso; // Progreso
+  final String _itemsText; // Elementos "X/Y"// Callback para eliminar el elemento
+  final VoidCallback? _onDelete; // Callback para eliminar el elemento
 
   ElementosListasCompartidasCreador({
     super.key,
-    required this.id,
-    required this.nombre,
-    required this.progreso,
-    required this.itemsText,
-    this.onDelete,
-  });
+    required String id,
+    required String nombre,
+    required double progreso,
+    required String itemsText,
+    void Function()? onDelete,
+  }) : _onDelete = onDelete, _itemsText = itemsText, _progreso = progreso, _nombre = nombre, _id = id;
 
-  FireStoreServiceListados fireStoreService = FireStoreServiceListados();
+  /// Servicio para interactuar con la coleccion 'listados' en Firestore
+  final FireStoreServiceListados _fireStoreServiceListados = FireStoreServiceListados();
 
   @override
   Widget build(BuildContext context) {
@@ -34,9 +36,9 @@ class ElementosListasCompartidasCreador extends StatelessWidget {
           context,
           MaterialPageRoute(
             builder: (context) => ArticulosListasPage(
-                listaId: id,
-                progress: progreso,
-                nombreLista: nombre,
+                listaId: _id,
+                progress: _progreso,
+                nombreLista: _nombre,
             ),
           ),
         );
@@ -48,12 +50,12 @@ class ElementosListasCompartidasCreador extends StatelessWidget {
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
         // Tarjeta que contiene el Slidable
         child: Slidable(
-          key: ValueKey(id), // Clave única para el Slidable
+          key: ValueKey(_id), // Clave única para el Slidable
           endActionPane: ActionPane( // Deslizar hacia la izquierda para mostrar acciones
             motion: const ScrollMotion(), // Animación de deslizamiento
             dismissible: DismissiblePane(onDismissed: () {
-              if (onDelete != null) {
-                onDelete!(); // Llama al callback para eliminar el elemento
+              if (_onDelete != null) {
+                _onDelete!(); // Llama al callback para eliminar el elemento
               }
             }),
             children: [ // Widgets de acciones (Slidable Actions)
@@ -62,9 +64,9 @@ class ElementosListasCompartidasCreador extends StatelessWidget {
                 onPressed: (context) {
                   EditarNombreDialog.show(
                     context,
-                    nombreInicial: nombre,
+                    nombreInicial: _nombre,
                     onSave: (nuevoNombre) {
-                      fireStoreService.updateListadoName(id, nuevoNombre);
+                      _fireStoreServiceListados.updateListadoName(_id, nuevoNombre);
                     },
                   );
                 },
@@ -79,8 +81,8 @@ class ElementosListasCompartidasCreador extends StatelessWidget {
                     context: context,
                     isScrollControlled: true, // Esto permite que el BottomSheet se ajuste al teclado
                     builder: (context) => CompartirLista(
-                      idLista: id,
-                      nombreLista: nombre,
+                      idLista: _id,
+                      nombreLista: _nombre,
                     ),
                   );
                 },
@@ -91,8 +93,8 @@ class ElementosListasCompartidasCreador extends StatelessWidget {
               SlidableAction(
                 //-- Accion Eliminar
                 onPressed: (context) {
-                  if (onDelete != null) {
-                    onDelete!(); // Llama al callback para eliminar el elemento
+                  if (_onDelete != null) {
+                    _onDelete!(); // Llama al callback para eliminar el elemento
                   }
                 },
                 backgroundColor: Colors.red,
@@ -111,7 +113,7 @@ class ElementosListasCompartidasCreador extends StatelessWidget {
                   children: [
                     //-- Título de la lista
                     Text(
-                      nombre,
+                      _nombre,
                       style: const TextStyle(fontSize: 24),
                     ),
                     //-- Botón de opciones
@@ -123,7 +125,7 @@ class ElementosListasCompartidasCreador extends StatelessWidget {
                             showModalBottomSheet(
                               context: context,
                               builder: (context) {
-                                return OpcionesGestionarCompartir(idLista: id, nombreLista: nombre);
+                                return OpcionesGestionarCompartir(idLista: _id);
                               },
                             );
                           },
@@ -134,7 +136,7 @@ class ElementosListasCompartidasCreador extends StatelessWidget {
                             showModalBottomSheet(
                               context: context,
                               builder: (context) {
-                                return OpcionesListado(idLista: id, nombreLista: nombre,);
+                                return OpcionesListado(idLista: _id, nombreLista: _nombre,);
                               },
                             );
                           },
@@ -146,7 +148,7 @@ class ElementosListasCompartidasCreador extends StatelessWidget {
               ),
               Center(
                 child: Text(
-                  itemsText,
+                  _itemsText,
                   style: const TextStyle(fontSize: 20),
                 ),
               ),
@@ -155,10 +157,10 @@ class ElementosListasCompartidasCreador extends StatelessWidget {
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(10),
                   child: LinearProgressIndicator(
-                    value: progreso,
+                    value: _progreso,
                     minHeight: 10,
                     backgroundColor: Colors.grey.shade300,
-                    valueColor: AlwaysStoppedAnimation<Color>(colorBaseProgreso(progreso)),
+                    valueColor: AlwaysStoppedAnimation<Color>(colorBaseProgreso(_progreso)),
                   ),
                 ),
               ),
@@ -170,6 +172,12 @@ class ElementosListasCompartidasCreador extends StatelessWidget {
     );
   }
 
+  /// Devuelve un color interpolado según el valor de progreso.
+  /// - Rojo para progreso bajo (0.0)
+  /// - Naranja para progreso medio (0.5)
+  /// - Verde para progreso alto (1.0)
+  ///
+  /// [progressValue] Valor de progreso entre 0.0 y 1.0
   Color colorBaseProgreso(double progressValue) {
     // Interpolación de color: rojo (0.0), naranja (0.5), verde (1.0)
     if (progressValue <= 0.5) {

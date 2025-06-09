@@ -4,31 +4,30 @@ import 'package:flutter/material.dart';
 import '../../core/services/listados_service_fb.dart';
 import '../../core/services/usuarios_service_fb.dart';
 
+/// Widget para visualizar los usuarios en una lista compartida
 class OpcionesVisualizarCompartir extends StatefulWidget {
-  final String idLista;
-  final String nombreLista;
+  final String _idLista; // Identificador de la lista
 
   const OpcionesVisualizarCompartir({
     super.key,
-    required this.idLista,
-    required this.nombreLista,
-  });
+    required String idLista,
+  }) : _idLista = idLista;
 
   @override
-  State<OpcionesVisualizarCompartir> createState() =>
-      _OpcionesVisualizarCompartirState();
+  State<OpcionesVisualizarCompartir> createState() => _OpcionesVisualizarCompartirState();
 }
 
-class _OpcionesVisualizarCompartirState
-    extends State<OpcionesVisualizarCompartir> {
-  final FireStoreServiceUsuarios fireStoreServiceUsers = FireStoreServiceUsuarios();
-  final FireStoreServiceListados fireStoreService = FireStoreServiceListados();
+class _OpcionesVisualizarCompartirState extends State<OpcionesVisualizarCompartir> {
+  /// Servicio para interactuar con la coleccion 'usuarios' en Firestore
+  final FireStoreServiceUsuarios fireStoreServiceUsuarios = FireStoreServiceUsuarios();
+  /// Servicio para interactuar con la coleccion 'listados' en Firestore
+  final FireStoreServiceListados fireStoreServiceListados = FireStoreServiceListados();
 
+  /// Obtiene los usuarios que están en el listado compartido junto al creador
   Future<List<DocumentSnapshot>> getUsuariosEnListado() async {
-    final listado = await fireStoreService.getUsuariosListado(widget.idLista);
-    // Añadimos el creador del listado al listado
-    listado.add(await fireStoreService.getUidCreadorById(widget.idLista));
-    final usuarios = await fireStoreServiceUsers.getUsuariosSnapshot();
+    final listado = await fireStoreServiceListados.getUsuariosListado(widget._idLista);
+    listado.add(await fireStoreServiceListados.getUidCreadorById(widget._idLista));
+    final usuarios = await fireStoreServiceUsuarios.getUsuariosSnapshot();
     return usuarios.where((usuario) => listado.contains(usuario.id)).toList();
   }
 

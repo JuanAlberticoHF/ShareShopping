@@ -1,16 +1,18 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
 
+/// Dialogo para editar el nombre de una lista
 class EditarNombreDialog extends StatefulWidget {
-  final String nombreInicial;
-  final void Function(String) onSave;
+  final String _nombreInicial; // Nombre inicial de la lista
+  final void Function(String) _onSave; // Callback para guardar el nuevo nombre
 
   const EditarNombreDialog({
     super.key,
-    required this.nombreInicial,
-    required this.onSave,
-  });
+    required String nombreInicial,
+    required void Function(String) onSave,
+  }) : _onSave = onSave, _nombreInicial = nombreInicial;
 
+  /// Invoca el dialogo de edición de nombre en la pantalla.
   static Future<void> show(BuildContext context, {
     required String nombreInicial,
     required void Function(String) onSave,
@@ -29,14 +31,14 @@ class EditarNombreDialog extends StatefulWidget {
 }
 
 class _EditarNombreDialogState extends State<EditarNombreDialog> {
-  final _formKey = GlobalKey<FormState>();
-  late final TextEditingController _controller;
-  final FocusNode _focusNode = FocusNode();
+  final _formKey = GlobalKey<FormState>(); // Clave para el formulario
+  late final TextEditingController _controller; // Controlador de texto para el campo de entrada
+  final FocusNode _focusNode = FocusNode(); // Nodo de enfoque para el campo de entrada
 
   @override
   void initState() {
     super.initState();
-    _controller = TextEditingController(text: widget.nombreInicial);
+    _controller = TextEditingController(text: widget._nombreInicial);
     Future.delayed(const Duration(milliseconds: 100), () {
       _focusNode.requestFocus();
     });
@@ -85,7 +87,7 @@ class _EditarNombreDialogState extends State<EditarNombreDialog> {
               ElevatedButton(
                 onPressed: () {
                   if (_formKey.currentState!.validate()) {
-                    widget.onSave(_controller.text);
+                    widget._onSave(_controller.text);
                     Navigator.pop(context);
                   }
                 },

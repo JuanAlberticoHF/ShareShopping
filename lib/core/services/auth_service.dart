@@ -1,9 +1,10 @@
-
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 
 /// Servicio de autenticación para manejar el inicio de sesión, registro, cambio de contraseña y cierre de sesión
-ValueNotifier<AuthService> authServiceNotifier = ValueNotifier<AuthService>(AuthService());
+ValueNotifier<AuthService> authServiceNotifier = ValueNotifier<AuthService>(
+  AuthService(),
+);
 
 /// Clase que maneja la autenticación de usuarios utilizando Firebase Auth
 class AuthService {
@@ -22,11 +23,8 @@ class AuthService {
   /// - [email]: Correo electrónico del usuario.
   /// - [password]: Contraseña del usuario.
   Future<User?> iniciarSesion(String email, String password) async {
-      UserCredential userCredential = await _firebaseAuth.signInWithEmailAndPassword(
-        email: email,
-        password: password,
-      );
-      return userCredential.user;
+    UserCredential userCredential = await _firebaseAuth.signInWithEmailAndPassword(email: email, password: password);
+    return userCredential.user;
   }
 
   /// Registra un nuevo usuario con correo electrónico y contraseña.
@@ -35,10 +33,7 @@ class AuthService {
   /// - [email]: Correo electrónico del usuario.
   /// - [password]: Contraseña del usuario.
   Future<User?> crearUsuario(String email, String password) async {
-    UserCredential userCredential = await _firebaseAuth.createUserWithEmailAndPassword(
-      email: email,
-      password: password,
-    );
+    UserCredential userCredential = await _firebaseAuth.createUserWithEmailAndPassword(email: email, password: password);
     return userCredential.user;
   }
 

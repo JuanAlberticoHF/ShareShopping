@@ -1,10 +1,11 @@
-
 import 'package:firebase_cloud_firestore/firebase_cloud_firestore.dart';
 import 'auth_service.dart';
 
 /// Servicio para gestionar los listados en FireStore Database
 class FireStoreServiceListados {
-  final CollectionReference dbListados = FirebaseFirestore.instance.collection('listados');
+  final CollectionReference dbListados = FirebaseFirestore.instance.collection(
+    'listados',
+  );
 
   /// Agrega un nuevo listado a la colección `listados` en Firestore.
   ///
@@ -65,7 +66,7 @@ class FireStoreServiceListados {
   ///
   /// Parámetros:
   /// - [id]: Identificador único del listado.
-  Future<List<String>> getUsuariosListado (String id) {
+  Future<List<String>> getUsuariosListado(String id) {
     return dbListados.doc(id).get().then((doc) {
       if (doc.exists) {
         List<dynamic> compartidos = doc.get('compartidos');
@@ -165,7 +166,10 @@ class FireStoreServiceListados {
   /// Parámetros:
   /// - [id]: Identificador único del listado.
   /// - [compartidos]: Lista de IDs de usuarios que tienen acceso al listado.
-  Future<void> updateListadoCompartidos(String id, List<String> compartidos) async {
+  Future<void> updateListadoCompartidos(
+    String id,
+    List<String> compartidos,
+  ) async {
     final listadoObj = <String, dynamic>{
       'compartidos': compartidos,
       'fecha_modificacion': Timestamp.fromDate(DateTime.now()),

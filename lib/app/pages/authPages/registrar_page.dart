@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:ShareShopping/core/services/auth_service.dart';
 import 'package:ShareShopping/core/services/usuarios_service_fb.dart';
 
+/// Página para registrar un nuevo usuario
 class RegistrarPage extends StatefulWidget {
   const RegistrarPage({super.key});
 
@@ -11,14 +12,16 @@ class RegistrarPage extends StatefulWidget {
 }
 
 class _RegistrarPageState extends State<RegistrarPage> {
-  final _formKey = GlobalKey<FormState>();
-  final _emailController = TextEditingController();
-  final _passwordController = TextEditingController();
-  final _confirmController = TextEditingController();
+  final _formKey = GlobalKey<FormState>(); // Clave para el formulario
+  final _emailController = TextEditingController(); // Controlador de texto para el campo de correo electrónico
+  final _passwordController = TextEditingController(); // Controlador de texto para el campo de contraseña
+  final _confirmController = TextEditingController(); // Controlador de texto para el campo de confirmación de contraseña
 
-  final FireStoreServiceUsuarios fireStoreServiceUsers = FireStoreServiceUsuarios();
+  /// Servicio para interactuar con la coleccion 'usuarios' en Firestore
+  final FireStoreServiceUsuarios fireStoreServiceUsuarios = FireStoreServiceUsuarios();
 
-  void registrar() async {
+  /// Registra al usuario en Firebase Auth y posteriormente en Firestore
+  void _registrar() async {
     try {
       User? user = await authServiceNotifier.value.crearUsuario(
         _emailController.text,
@@ -28,7 +31,7 @@ class _RegistrarPageState extends State<RegistrarPage> {
       String? email = user.email;
 
       if (email != null) {
-        fireStoreServiceUsers.addUsuario(uid, email);
+        fireStoreServiceUsuarios.addUsuario(uid, email);
       }
 
     } on FirebaseException catch (e) {
@@ -57,7 +60,8 @@ class _RegistrarPageState extends State<RegistrarPage> {
     super.dispose();
   }
 
-  Widget _customTextField({
+  /// Crea un campo de texto personalizado para el formulario
+  Widget _textFieldPersonalizado({
     required String texto,
     required TextEditingController controller,
     bool obscure = false,
@@ -113,18 +117,18 @@ class _RegistrarPageState extends State<RegistrarPage> {
                   color: Colors.black87,
                 ),
                 const SizedBox(height: 24),
-                _customTextField(
+                _textFieldPersonalizado(
                   texto: 'Correo Electrónico',
                   controller: _emailController,
                 ),
                 const SizedBox(height: 16.0),
-                _customTextField(
+                _textFieldPersonalizado(
                   texto: 'Contraseña',
                   controller: _passwordController,
                   obscure: true,
                 ),
                 const SizedBox(height: 16.0),
-                _customTextField(
+                _textFieldPersonalizado(
                   texto: 'Confirmar contraseña',
                   controller: _confirmController,
                   obscure: true,
@@ -137,7 +141,7 @@ class _RegistrarPageState extends State<RegistrarPage> {
                   ),
                   onPressed: () {
                     if (_formKey.currentState!.validate()) {
-                      registrar();
+                      _registrar();
                     }
                   },
                   child: const Text(

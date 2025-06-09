@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 
 import '../../../core/services/auth_service.dart';
 
+/// Página para iniciar sesión en la aplicación
 class IniciarSesionPage extends StatefulWidget {
   const IniciarSesionPage({super.key});
 
@@ -11,10 +12,11 @@ class IniciarSesionPage extends StatefulWidget {
 }
 
 class _IniciarSesionPageState extends State<IniciarSesionPage> {
-  final _formKey = GlobalKey<FormState>();
-  final _emailController = TextEditingController();
-  final _passwordController = TextEditingController();
+  final _formKey = GlobalKey<FormState>(); // Clave para el formulario
+  final _emailController = TextEditingController(); // Controlador de texto para el campo de correo electrónico
+  final _passwordController = TextEditingController(); // Controlador de texto para el campo de contraseña
 
+  /// Inicio de sesión en Firebase Auth
   void iniciarSesion() async {
     try {
       await authServiceNotifier.value.iniciarSesion(
@@ -46,7 +48,8 @@ class _IniciarSesionPageState extends State<IniciarSesionPage> {
     super.dispose();
   }
 
-  Widget _buildTextField({
+  /// Crea un campo de texto personalizado para el formulario
+  Widget _textFieldPersonalizado({
     required String texto,
     required TextEditingController controller,
     bool obscure = false,
@@ -99,12 +102,12 @@ class _IniciarSesionPageState extends State<IniciarSesionPage> {
                   color: Colors.black87,
                 ),
                 const SizedBox(height: 24),
-                _buildTextField(
+                _textFieldPersonalizado(
                   texto: 'Correo Electrónico',
                   controller: _emailController,
                 ),
                 const SizedBox(height: 16.0),
-                _buildTextField(
+                _textFieldPersonalizado(
                   texto: 'Contraseña',
                   controller: _passwordController,
                   obscure: true,

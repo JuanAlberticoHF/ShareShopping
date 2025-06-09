@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:ShareShopping/app/pages/authPages/sin_cuenta_page.dart';
 import '../../../core/services/auth_service.dart';
 
+/// Página que muestra el perfil del usuario
 class PerfilUsuarioPage extends StatelessWidget {
   const PerfilUsuarioPage({super.key});
 
