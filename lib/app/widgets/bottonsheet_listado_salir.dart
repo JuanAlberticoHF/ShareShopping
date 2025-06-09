@@ -3,9 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:shareshopping/core/services/listados_fb.dart';
 
 import '../../core/services/auth_service.dart';
-import '../../core/services/usuarios_fb.dart';
-import 'bottonsheet_compartir.dart';
-import 'editar_nombre_dialog.dart';
 
 class OpcionesListadoSalir extends StatelessWidget {
   OpcionesListadoSalir({super.key, required this.idLista, required this.nombreLista});

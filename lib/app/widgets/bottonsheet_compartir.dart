@@ -29,6 +29,15 @@ class CompartirLista extends StatelessWidget {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
+                Container(
+                  width: 150,
+                  height: 5,
+                  decoration: BoxDecoration(
+                    color: Colors.black,
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                ),
+                SizedBox(height: 8),
                 Text(
                   'COMPARTIR',
                   style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
@@ -55,13 +64,6 @@ class CompartirLista extends StatelessWidget {
                     final email = emailController.text.trim();
                     if (email.isNotEmpty) {
                       final uid = await fireStoreServiceUsers.getUidUsuarioByCorreo(email);
-                      print("UID obtenido: $uid");
-                      if (uid == null) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(content: Text('No existe un usuario con ese correo')),
-                        );
-                        return;
-                      }
                       if (await fireStoreService.existsUidCompartido(idLista, uid)) {
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(content: Text('La lista ya está compartida con $email')),

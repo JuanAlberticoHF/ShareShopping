@@ -1,10 +1,10 @@
-import "package:firebase_cloud_firestore/firebase_cloud_firestore.dart";
+
 import "package:flutter/material.dart";
 import "package:shareshopping/app/pages/operationPages/papelera_page.dart";
-import "package:shareshopping/app/widgets/elemento_listados_compartidos.dart";
 import "package:shareshopping/core/services/auth_service.dart";
 import "../../../core/services/listados_fb.dart";
 import "../../widgets/elemento_listados.dart";
+import "../../widgets/elemento_listados_compartidos_creador.dart";
 import "../operationPages/add_listas_page.dart";
 import 'package:firebase_auth/firebase_auth.dart';
 
@@ -20,6 +20,28 @@ class ListasUsuarioPageState extends State<ListasUsuarioPage> {
   bool _isSearching = false;
   final TextEditingController _searchController = TextEditingController();
   String _searchText = "";
+
+  Widget sinDatos() {
+    return const Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Image(
+            image: AssetImage("assets/lista.png"),
+            width: 150,
+            height: 150,
+          ),
+          SizedBox(height: 16),
+          Text(
+            "No se han encontrado listas",
+            style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
+          ),
+        ],
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -136,7 +158,7 @@ class ListasUsuarioPageState extends State<ListasUsuarioPage> {
                 return Center(child: Text("Error: ${snapshotListas.error}"));
               }
               if (!snapshotListas.hasData || snapshotListas.data!.docs.isEmpty) {
-                return const Center(child: Text("No se han encontrado listas"));
+                return sinDatos();
               }
 
               final listados = snapshotListas.data!.docs;
@@ -148,7 +170,7 @@ class ListasUsuarioPageState extends State<ListasUsuarioPage> {
               }).toList();
 
               if (listasFiltradas.isEmpty) {
-                return const Center(child: Text("No se han encontrado listas"));
+                return sinDatos();
               }
 
               return ListView.builder(
@@ -156,6 +178,7 @@ class ListasUsuarioPageState extends State<ListasUsuarioPage> {
                 itemBuilder: (BuildContext context, int index) {
                   final listado = listasFiltradas[index];
                   final articulo = listado.get("articulos");
+                  final compartidos = listado.get("compartidos");
 
                   int cantidadArticulos = articulo.length;
                   int articulosMarcados = 0;
@@ -165,15 +188,27 @@ class ListasUsuarioPageState extends State<ListasUsuarioPage> {
                   final textoProgreso = "$articulosMarcados/$cantidadArticulos";
                   double valorProgreso = cantidadArticulos > 0 ? articulosMarcados / cantidadArticulos : 0;
 
-                  return ElementosListas(
-                    id: listado.id,
-                    nombre: listado['nombre'],
-                    progreso: valorProgreso,
-                    itemsText: textoProgreso,
-                    onDelete: () {
-                      fireStoreService.updateListadoOperativo(listado.id, false);
-                    },
-                  );
+                  if (compartidos.isEmpty) {
+                    return ElementosListas(
+                      id: listado.id,
+                      nombre: listado['nombre'],
+                      progreso: valorProgreso,
+                      itemsText: textoProgreso,
+                      onDelete: () {
+                        fireStoreService.updateListadoOperativo(listado.id, false);
+                      },
+                    );
+                  } else {
+                    return ElementosListasCompartidasCreador(
+                      id: listado.id,
+                      nombre: listado['nombre'],
+                      progreso: valorProgreso,
+                      itemsText: textoProgreso,
+                      onDelete: () {
+                        fireStoreService.updateListadoOperativo(listado.id, false);
+                      },
+                    );
+                  }
                 },
               );
             },

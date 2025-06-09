@@ -51,7 +51,7 @@ class AddListasPage extends StatelessWidget {
               onPressed: () {
                 String nombreLista = _controller.text;
                 if (nombreLista.isEmpty) {
-                  nombreLista = "Nueva Lista";
+                  nombreLista = "Nueva lista";
                 }
                 fireStoreService.addListado(nombreLista);
                 _controller.clear(); // Limpiar el campo de texto después de crear la lista

@@ -2,7 +2,6 @@ import "package:firebase_cloud_firestore/firebase_cloud_firestore.dart";
 import "package:flutter/material.dart";
 import "package:shareshopping/core/services/auth_service.dart";
 import "../../../core/services/listados_fb.dart";
-import "../../widgets/elemento_listados.dart";
 import 'package:firebase_auth/firebase_auth.dart';
 
 import "../../widgets/elemento_listados_compartidos.dart";
@@ -19,6 +18,28 @@ class ListasCompartidasPageState extends State<ListasCompartidasPage> {
   bool _isSearching = false;
   final TextEditingController _searchController = TextEditingController();
   String _searchText = "";
+
+  Widget sinDatos() {
+    return const Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Image(
+            image: AssetImage("assets/lista.png"),
+            width: 150,
+            height: 150,
+          ),
+          SizedBox(height: 16),
+          Text(
+            "No se han encontrado listas",
+            style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
+          ),
+        ],
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -93,7 +114,7 @@ class ListasCompartidasPageState extends State<ListasCompartidasPage> {
               }).toList();
 
               if (listasFiltradas.isEmpty) {
-                return const Center(child: Text("No se han encontrado listas"));
+                return sinDatos();
               }
 
               return ListView.builder(

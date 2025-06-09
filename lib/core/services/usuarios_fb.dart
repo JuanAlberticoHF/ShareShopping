@@ -20,6 +20,10 @@ class FireStoreServiceUsers {
     return dbUsuarios.snapshots();
   }
 
+  Future<List<DocumentSnapshot>> getUsuariosSnapshot() {
+    return dbUsuarios.get().then((snapshot) => snapshot.docs);
+  }
+
   Future<String> getUidUsuarioByCorreo(String correo) {
     return dbUsuarios
         .where('correo', isEqualTo: correo)
