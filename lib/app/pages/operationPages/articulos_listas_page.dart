@@ -45,8 +45,6 @@ class _ArticulosListasPageState extends State<ArticulosListasPage> {
         'nombre': nombre,
         'check': false,
         'cantidad': 1,
-        'nota': '',
-        'unidad': null,
       });
 
       fireStoreService.updateListado(widget.listaId, articulos);
@@ -172,6 +170,60 @@ class _ArticulosListasPageState extends State<ArticulosListasPage> {
                         }
                       },
                       child: ListTile(
+                        trailing: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Text('${articulo['cantidad'] ?? 1}', style: TextStyle(fontSize: 16)),
+                            SizedBox(width: 12), // Espacio entre la cantidad y los botones
+                            IconButton(
+                              icon: Icon(Icons.remove, color: Colors.red),
+                              onPressed: () async {
+                                int cantidad = (articulo['cantidad'] ?? 1);
+                                if (cantidad > 1) {
+                                  List<dynamic> nuevosArticulos = List.from(articulos);
+                                  nuevosArticulos[index] = {
+                                    ...articulo,
+                                    'cantidad': cantidad - 1,
+                                  };
+                                  await fireStoreService.updateListado(
+                                    widget.listaId,
+                                    nuevosArticulos,
+                                  );
+                                  recalcularProgreso(nuevosArticulos);
+                                } else {
+                                  List<dynamic> nuevosArticulos = List.from(articulos)..removeAt(index);
+                                  await fireStoreService.updateListado(
+                                    widget.listaId,
+                                    nuevosArticulos,
+                                  );
+                                  recalcularProgreso(nuevosArticulos);
+                                }
+                              },
+                              visualDensity: VisualDensity(horizontal: -4, vertical: -4),
+                              constraints: BoxConstraints(minWidth: 24, minHeight: 24),
+                              padding: EdgeInsets.zero,
+                            ),
+                            IconButton(
+                              icon: Icon(Icons.add, color: Colors.green),
+                              onPressed: () async {
+                                int cantidad = (articulo['cantidad'] ?? 1);
+                                List<dynamic> nuevosArticulos = List.from(articulos);
+                                nuevosArticulos[index] = {
+                                  ...articulo,
+                                  'cantidad': cantidad + 1,
+                                };
+                                await fireStoreService.updateListado(
+                                  widget.listaId,
+                                  nuevosArticulos,
+                                );
+                                recalcularProgreso(nuevosArticulos);
+                              },
+                              visualDensity: VisualDensity(horizontal: -4, vertical: -4),
+                              constraints: BoxConstraints(minWidth: 24, minHeight: 24),
+                              padding: EdgeInsets.zero,
+                            ),
+                          ],
+                        ),
                         leading: Checkbox(
                           value: check,
                           onChanged: (nuevoValor) async {

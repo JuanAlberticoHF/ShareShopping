@@ -1,5 +1,4 @@
 
-import 'package:async/async.dart';
 import 'package:firebase_cloud_firestore/firebase_cloud_firestore.dart';
 import 'auth_service.dart';
 
@@ -30,6 +29,15 @@ class FireStoreService {
     return dbListados.doc(id).get();
   }
 
+  Future<String> getUidCreadorById(String id) async {
+    DocumentSnapshot doc = await dbListados.doc(id).get();
+    if (doc.exists) {
+      return doc.get('creador') as String;
+    } else {
+      throw Exception("Listado no encontrado");
+    }
+  }
+
   Stream<QuerySnapshot> getListadosByCreador(String creadorUid) {
     return dbListados.where('creador', isEqualTo: creadorUid).snapshots();
   }
@@ -44,20 +52,15 @@ class FireStoreService {
         .where('compartidos', isEqualTo: []).snapshots();
   }
 
-  Stream<List<QueryDocumentSnapshot>> getListadosCreadorOCompartido(String uid) {
-    final creadorCompartidos = dbListados
-        .where('creador', isEqualTo: uid)
-        .where('compartidos', isNotEqualTo: [])
-        .snapshots();
-
-    final compartidos = dbListados
-        .where('compartidos', arrayContains: uid)
-        .snapshots();
-
-    return StreamGroup.merge([
-      creadorCompartidos,
-      compartidos,
-    ]).map((snapshot) => snapshot.docs);
+  Future<List<String>> getUsuariosListado (String id) {
+    return dbListados.doc(id).get().then((doc) {
+      if (doc.exists) {
+        List<dynamic> compartidos = doc.get('compartidos');
+        return compartidos.cast<String>();
+      } else {
+        return [];
+      }
+    });
   }
 
   Stream<QuerySnapshot> getListadosByCompartidos(String uid) {

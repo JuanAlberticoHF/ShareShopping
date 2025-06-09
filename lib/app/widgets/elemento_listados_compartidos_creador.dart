@@ -1,25 +1,27 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:shareshopping/app/pages/operationPages/articulos_listas_page.dart';
-import 'package:shareshopping/app/widgets/bottonsheet_listado_salir.dart';
+import 'package:shareshopping/app/widgets/bottonsheet_compartir.dart';
 
 import '../../core/services/listados_fb.dart';
-import 'bottonsheet_visualizar_compartir.dart';
+import 'bottonsheet_gestionar_compartir.dart';
+import 'bottonsheet_listado.dart';
+import 'editar_nombre_dialog.dart';
 
-class ElementosListasCompartidas extends StatelessWidget {
+class ElementosListasCompartidasCreador extends StatelessWidget {
   final String id; // Identificador
   final String nombre; // Título
   final double progreso; // Progreso
   final String itemsText; // Elementos "X/Y"// Callback para eliminar el elemento
-  final VoidCallback? onLeave;
+  final VoidCallback? onDelete;
 
-  ElementosListasCompartidas({
+  ElementosListasCompartidasCreador({
     super.key,
     required this.id,
     required this.nombre,
     required this.progreso,
     required this.itemsText,
-    this.onLeave,
+    this.onDelete,
   });
 
   FireStoreService fireStoreService = FireStoreService();
@@ -50,22 +52,50 @@ class ElementosListasCompartidas extends StatelessWidget {
           endActionPane: ActionPane( // Deslizar hacia la izquierda para mostrar acciones
             motion: const ScrollMotion(), // Animación de deslizamiento
             dismissible: DismissiblePane(onDismissed: () {
-              if (onLeave != null) {
-                onLeave!(); // Llama al callback para eliminar el elemento
+              if (onDelete != null) {
+                onDelete!(); // Llama al callback para eliminar el elemento
               }
             }),
             children: [ // Widgets de acciones (Slidable Actions)
               //-- Accion Editar
               SlidableAction(
+                onPressed: (context) {
+                  EditarNombreDialog.show(
+                    context,
+                    nombreInicial: nombre,
+                    onSave: (nuevoNombre) {
+                      fireStoreService.updateListadoName(id, nuevoNombre);
+                    },
+                  );
+                },
+                backgroundColor: Colors.blue,
+                foregroundColor: Colors.white,
+                icon: Icons.edit,
+              ),
+              //-- Accion Compartir
+              SlidableAction(
+                onPressed: (context) {
+                  showModalBottomSheet(
+                    context: context,
+                    builder: (context) {
+                      return CompartirLista(idLista: id, nombreLista: nombre,);
+                    },
+                  );
+                },
+                backgroundColor: Colors.green,
+                foregroundColor: Colors.white,
+                icon: Icons.person_add,
+              ),
+              SlidableAction(
                 //-- Accion Eliminar
                 onPressed: (context) {
-                  if (onLeave != null) {
-                    onLeave!(); // Llama al callback para eliminar el elemento
+                  if (onDelete != null) {
+                    onDelete!(); // Llama al callback para eliminar el elemento
                   }
                 },
                 backgroundColor: Colors.red,
                 foregroundColor: Colors.white,
-                icon: Icons.output,
+                icon: Icons.delete,
               ),
             ],
           ),
@@ -83,7 +113,7 @@ class ElementosListasCompartidas extends StatelessWidget {
                       style: const TextStyle(fontSize: 24),
                     ),
                     //-- Botón de opciones
-                    Row(
+                    Row (
                       children: [
                         IconButton(
                           icon: const Icon(Icons.group),
@@ -91,7 +121,7 @@ class ElementosListasCompartidas extends StatelessWidget {
                             showModalBottomSheet(
                               context: context,
                               builder: (context) {
-                                return OpcionesVisualizarCompartir(idLista: id, nombreLista: nombre,);
+                                return OpcionesGestionarCompartir(idLista: id, nombreLista: nombre);
                               },
                             );
                           },
@@ -102,7 +132,7 @@ class ElementosListasCompartidas extends StatelessWidget {
                             showModalBottomSheet(
                               context: context,
                               builder: (context) {
-                                return OpcionesListadoSalir(idLista: id, nombreLista: nombre,);
+                                return OpcionesListado(idLista: id, nombreLista: nombre,);
                               },
                             );
                           },
