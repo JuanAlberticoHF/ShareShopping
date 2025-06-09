@@ -1,8 +1,8 @@
 import 'package:firebase_cloud_firestore/firebase_cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
-import '../../core/services/listados_fb.dart';
-import '../../core/services/usuarios_fb.dart';
+import '../../core/services/listados_service_fb.dart';
+import '../../core/services/usuarios_service_fb.dart';
 
 class OpcionesGestionarCompartir extends StatefulWidget {
   final String idLista;
@@ -19,8 +19,8 @@ class OpcionesGestionarCompartir extends StatefulWidget {
 }
 
 class _OpcionesGestionarCompartirState extends State<OpcionesGestionarCompartir> {
-  final FireStoreServiceUsers fireStoreServiceUsers = FireStoreServiceUsers();
-  final FireStoreService fireStoreService = FireStoreService();
+  final FireStoreServiceUsuarios fireStoreServiceUsers = FireStoreServiceUsuarios();
+  final FireStoreServiceListados fireStoreService = FireStoreServiceListados();
 
   late Future<List<DocumentSnapshot>> _usuariosFuture;
 

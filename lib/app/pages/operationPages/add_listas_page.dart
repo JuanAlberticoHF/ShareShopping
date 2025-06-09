@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 
-import '../../../core/services/listados_fb.dart';
+import '../../../core/services/listados_service_fb.dart';
 
 class AddListasPage extends StatelessWidget {
   AddListasPage({super.key});
 
   final TextEditingController _controller = TextEditingController();
-  final FireStoreService fireStoreService = FireStoreService();
+  final FireStoreServiceListados fireStoreService = FireStoreServiceListados();
 
   @override
   Widget build(BuildContext context) {

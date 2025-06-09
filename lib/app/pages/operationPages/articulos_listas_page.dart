@@ -1,7 +1,7 @@
 import 'package:firebase_cloud_firestore/firebase_cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
-import '../../../core/services/listados_fb.dart'; // Servicio de Firestore
+import '../../../core/services/listados_service_fb.dart'; // Servicio de Firestore
 
 class ArticulosListasPage extends StatefulWidget {
   final String listaId; // ID del listado
@@ -21,7 +21,7 @@ class ArticulosListasPage extends StatefulWidget {
 
 class _ArticulosListasPageState extends State<ArticulosListasPage> {
   // Variables de la pagina
-  final FireStoreService fireStoreService = FireStoreService(); // Servicio de Firestore
+  final FireStoreServiceListados fireStoreService = FireStoreServiceListados(); // Servicio de Firestore
   final TextEditingController _controller = TextEditingController();
   late double progressValue; // Valor del progreso
 

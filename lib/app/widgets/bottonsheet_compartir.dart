@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:ShareShopping/core/services/usuarios_fb.dart';
+import 'package:ShareShopping/core/services/usuarios_service_fb.dart';
 
-import '../../core/services/listados_fb.dart';
+import '../../core/services/listados_service_fb.dart';
 
 class CompartirLista extends StatelessWidget {
   final String idLista;
   final String nombreLista;
   final TextEditingController emailController = TextEditingController();
-  final FireStoreServiceUsers fireStoreServiceUsers = FireStoreServiceUsers();
-  final FireStoreService fireStoreService = FireStoreService();
+  final FireStoreServiceUsuarios fireStoreServiceUsers = FireStoreServiceUsuarios();
+  final FireStoreServiceListados fireStoreService = FireStoreServiceListados();
 
   CompartirLista({super.key, required this.idLista, required this.nombreLista});
 
@@ -66,7 +66,7 @@ class CompartirLista extends StatelessWidget {
                       final email = emailController.text.trim();
                       if (email.isNotEmpty) {
                         final uid = await fireStoreServiceUsers
-                            .getUidUsuarioByCorreo(email);
+                            .getUidByCorreo(email);
                         if (await fireStoreService.existsUidCompartido(
                           idLista,
                           uid,

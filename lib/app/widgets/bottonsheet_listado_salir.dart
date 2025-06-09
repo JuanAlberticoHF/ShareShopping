@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:ShareShopping/core/services/listados_fb.dart';
+import 'package:ShareShopping/core/services/listados_service_fb.dart';
 
 import '../../core/services/auth_service.dart';
 
@@ -11,7 +11,7 @@ class OpcionesListadoSalir extends StatelessWidget {
   });
 
   final String idLista;
-  final FireStoreService fireStoreService = FireStoreService();
+  final FireStoreServiceListados fireStoreService = FireStoreServiceListados();
   final String nombreLista;
 
   @override

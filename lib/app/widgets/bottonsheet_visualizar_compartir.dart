@@ -1,8 +1,8 @@
 import 'package:firebase_cloud_firestore/firebase_cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
-import '../../core/services/listados_fb.dart';
-import '../../core/services/usuarios_fb.dart';
+import '../../core/services/listados_service_fb.dart';
+import '../../core/services/usuarios_service_fb.dart';
 
 class OpcionesVisualizarCompartir extends StatefulWidget {
   final String idLista;
@@ -21,8 +21,8 @@ class OpcionesVisualizarCompartir extends StatefulWidget {
 
 class _OpcionesVisualizarCompartirState
     extends State<OpcionesVisualizarCompartir> {
-  final FireStoreServiceUsers fireStoreServiceUsers = FireStoreServiceUsers();
-  final FireStoreService fireStoreService = FireStoreService();
+  final FireStoreServiceUsuarios fireStoreServiceUsers = FireStoreServiceUsuarios();
+  final FireStoreServiceListados fireStoreService = FireStoreServiceListados();
 
   Future<List<DocumentSnapshot>> getUsuariosEnListado() async {
     final listado = await fireStoreService.getUsuariosListado(widget.idLista);

@@ -2,7 +2,7 @@ import "package:ShareShopping/app/pages/mainPages/perfil_usuario_page.dart";
 import "package:firebase_cloud_firestore/firebase_cloud_firestore.dart";
 import "package:flutter/material.dart";
 import "package:ShareShopping/core/services/auth_service.dart";
-import "../../../core/services/listados_fb.dart";
+import "../../../core/services/listados_service_fb.dart";
 import 'package:firebase_auth/firebase_auth.dart';
 
 import "../../widgets/elemento_listados_compartidos.dart";
@@ -15,7 +15,7 @@ class ListasCompartidasPage extends StatefulWidget {
 }
 
 class ListasCompartidasPageState extends State<ListasCompartidasPage> {
-  final FireStoreService fireStoreService = FireStoreService();
+  final FireStoreServiceListados fireStoreService = FireStoreServiceListados();
   bool _isSearching = false;
   final TextEditingController _searchController = TextEditingController();
   String _searchText = "";
