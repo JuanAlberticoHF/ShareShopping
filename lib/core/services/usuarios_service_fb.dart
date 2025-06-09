@@ -1,30 +1,44 @@
 
 import 'package:firebase_cloud_firestore/firebase_cloud_firestore.dart';
 
-class FireStoreServiceUsers {
+/// Service para gestionar usuarios en FireStore Database
+class FireStoreServiceUsuarios {
+  /// Referencia a la colección `usuarios` en Firestore
   final CollectionReference dbUsuarios = FirebaseFirestore.instance.collection('usuarios');
 
-  // CREATE: añadir un nuevo nuevo usuario
+  /// Agrega un nuevo usuario a la colección `usuarios` en Firestore.
+  ///
+  /// Parámetros:
+  /// - [uid]: Identificador único del usuario (usado como ID del documento).
+  /// - [correo]: Correo electrónico del usuario.
+  ///
+  /// Crea un documento con los campos `correo`, `fecha_creacion` y `fecha_modificacion`.
   Future<void> addUsuario(String uid, String correo) async {
     final usuarioObj = <String, dynamic>{
       'correo': correo,
       'fecha_creacion': Timestamp.fromDate(DateTime.now()),
       'fecha_modificacion': Timestamp.fromDate(DateTime.now()),
     };
-    // Usar set con el doc(uid) para que el uid sea el identificador del documento
-    await dbUsuarios.doc(uid).set(usuarioObj);
+    await dbUsuarios.doc(uid).set(usuarioObj); // Utiliza el UID como ID del documento
   }
 
-  // READ: Obtener usuarios
+  /// Stream para obtener actualizaciones en tiempo real de la colección `usuarios`.
   Stream<QuerySnapshot> getUsuarios() {
     return dbUsuarios.snapshots();
   }
 
+  /// Obtiene un usuario por su UID.
   Future<List<DocumentSnapshot>> getUsuariosSnapshot() {
     return dbUsuarios.get().then((snapshot) => snapshot.docs);
   }
 
-  Future<String> getUidUsuarioByCorreo(String correo) {
+  /// Devuelve el `uid` base a un correo.
+  ///
+  /// Parámetros:
+  /// - [correo]: Identificador único del usuario.
+  ///
+  /// Lanza una excepción si no se encuentra ningún usuario con ese correo.
+  Future<String> getUidByCorreo(String correo) {
     return dbUsuarios
         .where('correo', isEqualTo: correo)
         .get()
@@ -37,6 +51,12 @@ class FireStoreServiceUsers {
         });
   }
 
+  /// Devuelve el correo electrónico de un usuario dado su UID.
+  ///
+  /// Parámetros:
+  /// - [uid]: Identificador único del usuario.
+  ///
+  /// Lanza una excepción si no se encuentra ningún usuario con ese UID.
   Future<String> getCorreoByUid(String uid) {
     return dbUsuarios
         .where('uid', isEqualTo: uid)
@@ -49,8 +69,4 @@ class FireStoreServiceUsers {
           }
         });
   }
-
-  // Future<void> deleteUsuario(String uid) async {
-  //   await dbUsuarios.doc(uid).delete();
-  // }
 }

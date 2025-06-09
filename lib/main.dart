@@ -5,17 +5,18 @@ import 'app/pages/mainPages/listas_compartidas_page.dart';
 import 'app/pages/mainPages/mis_listas_page.dart';
 import 'data/sources/firebase_options.dart';
 
+/// Punto de entrada de la aplicacion.
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-  runApp(const MyApp());
+  runApp(const ShareShoppingAPP());
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
-
+/// ShareShoppingAPP es la aplicacion principal que contiene el widget MaterialApp.
+class ShareShoppingAPP extends StatelessWidget {
+  const ShareShoppingAPP({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -29,6 +30,8 @@ class MyApp extends StatelessWidget {
   }
 }
 
+/// MainPage es el widget que contiene la navegacion entre las 3 principales
+/// paginas de la aplicacion.
 class MainPage extends StatefulWidget {
   const MainPage({super.key});
 
@@ -36,17 +39,18 @@ class MainPage extends StatefulWidget {
   State<MainPage> createState() => _MainPageState();
 }
 
-class _MainPageState extends State<MainPage> {
-  // PAGINACION
-  int _indiceSeleccionado = 0;
 
-  static final List<Widget> _pages = [
+class _MainPageState extends State<MainPage> {
+
+  int _indiceSeleccionado = 0; // Indice pagina activa
+
+  static final List<Widget> _paginas = [
     ListasUsuarioPage(), // Indice 0
     ListasCompartidasPage(), // Indice 1
     PerfilUsuarioPage(), // Indice 2
   ];
 
-  void _onPageChanged(int index) {
+  void _cambiarPaginaA (int index) {
     setState(() {
       _indiceSeleccionado = index;
     });
@@ -57,28 +61,31 @@ class _MainPageState extends State<MainPage> {
     return Scaffold(
       body: IndexedStack(
         index: _indiceSeleccionado, // Indice de la pagina activa
-        children: _pages, // Listado de paginas disponibles
+        children: _paginas, // Listado de paginas disponibles
       ),
       bottomNavigationBar: BottomNavigationBar(
         backgroundColor: Colors.white,
         showSelectedLabels: true,
         currentIndex: _indiceSeleccionado,
         items: const [
+          // Pagina: Mis Listas
           BottomNavigationBarItem(
             icon: Icon(Icons.list),
             label: 'Listas',
           ),
+          // Pagina: Compartidas
           BottomNavigationBarItem(
             icon: Icon(Icons.share),
             label: 'Compartidas',
           ),
+          // Pagina: Perfil
           BottomNavigationBarItem(
             icon: Icon(Icons.person),
             label: 'Perfil',
           ),
         ],
         onTap: (index) {
-          _onPageChanged(index);
+          _cambiarPaginaA(index);
         },
       ),
     );
