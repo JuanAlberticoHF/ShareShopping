@@ -68,4 +68,4 @@ listas de compras.**
 - Gestion de usuarios de una lista compartida, panel listas compartidas, papelera de reciclaje y 
 perfil de usuario:
 
-![ShareShopping](./assets/shareshopping-images/shareshopping_app_pictures.png)
+![ShareShopping](./assets/shareshopping-images/shareshopping_app_pictures_2.png)
