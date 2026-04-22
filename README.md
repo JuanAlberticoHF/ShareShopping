@@ -6,6 +6,8 @@
 - [Instalación](#instalacion)
 - [Galeria de imagenes](#galeria)
 
+---
+
 ![ShareShopping](./assets/shareshopping-images/banner-shareshopping.png)
 
 **Share Shopping** es una aplicación movil de creación de listas de compras individual o colaborativas, con la posibilidad de compartirlas con otros usuarios de la aplicación y administrarlas en tiempo real. Disponible solamente para Android.
