@@ -18,7 +18,7 @@ que toda la información se almacena en la nube.
 ShareShopping conforma el proyecto final de curso (TFG) del grado superior de desarrollo de 
 aplicaciones multiplataforma (DAM), involucrando en mayor medida al modulo de programación 
 multimedia y dispositivos moviles.
-### FUNCIONALIDADES
+## FUNCIONALIDADES
 ShareShopping ofrece las siguientes funcionalidades:
 - **Autentificación basica de usuarios** (registro, inicio de sesión, cierre de sesión).
 - **Creación y gestion de listas de compras** (añadir, eliminar, editar).
@@ -28,7 +28,7 @@ ShareShopping ofrece las siguientes funcionalidades:
 - **Sincronización en tiempo real de las listas compartidas**.
 - **Funcionalidad offline para acceder a las listas sin conexión a internet**.
 
-### TECNOLOGIAS
+## TECNOLOGIAS
 ShareShopping se ha desarrollado utilizando las siguientes tecnologías:
 - **Lenguaje de programación**: `Dart`
 - **Framework (UI)**: `Flutter`
@@ -48,7 +48,7 @@ Aqui se detallan las características técnicas del proyecto de ShareShopping:
 - **Versión Dart**: `3.8.0`
 - **Versión DevTools**: `2.45.1`
 
-### INSTALACION
+## INSTALACION
 Para instalar ShareShopping en tu dispositivo Android, sigue estos pasos:
 1. **Descarga el archivo APK de ShareShopping** en la sección de releases de este repositorio.
 2. **Accede al gestor de archivos de tu dispositivo movil** y navega hasta la carpeta descargar o donde 
@@ -59,7 +59,7 @@ hayas guardado el archivo APK.
 5. **Una vez instalada, abre la aplicación y regístrate o inicia sesión para comenzar a crear tus 
 listas de compras.**
 
-### GALERIA
+## GALERIA
 - Panel de autentificación, creación de listas, listas del usuario y gestion, y lista de articulos:
 
 ![ShareShopping](./assets/shareshopping-images/shareshopping_app_pictures.png)
