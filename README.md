@@ -1,11 +1,10 @@
 # ShareShopping
 
-- [ShareShopping](#shareshopping)
-  - [Funcionalidades principales](#funcionalidades)
-  - [Tecnologias proyecto](#tecnologias)
-  - [Características técnicas](#caracteristicas)
-  - [Instalación](#instalacion)
-  - [Galeria de imagenes](#galeria)
+- [Funcionalidades principales](#funcionalidades)
+- [Tecnologias proyecto](#tecnologias)
+- [Características técnicas](#caracteristicas)
+- [Instalación](#instalacion)
+- [Galeria de imagenes](#galeria)
 
 ![ShareShopping](./assets/shareshopping-images/banner-shareshopping.png)
 
@@ -31,21 +30,21 @@ ShareShopping ofrece las siguientes funcionalidades:
 
 ### TECNOLOGIAS
 ShareShopping se ha desarrollado utilizando las siguientes tecnologías:
-- **Lenguaje de programación**: Dart
-- **Framework (UI)**: Flutter
-- **Base de datos**: Firebase Firestore
-- **Autenticación**: Firebase Authentication
-- **Gestor de versiones**: Git
-- **Repositorio**: GitHub
+- **Lenguaje de programación**: `Dart`
+- **Framework (UI)**: `Flutter`
+- **Base de datos**: `Firebase Firestore`
+- **Autenticación**: `Firebase Authentication`
+- **Gestor de versiones**: `Git`
+- **Repositorio**: `GitHub`
 
 ## CARACTERISTICAS
 
 Aqui se detallan las características técnicas del proyecto de ShareShopping:
 
 - **Versión proyecto**: `1.0.0`
-- **Plataforma**: Android 12 o superior
-- **IDE**: Android Studio Panda 1 | 2025.3.1 Patch 1
-- **Versión Flutter**: `3.32.0` (Stable)
+- **Plataforma**: `Android 12 o superior`
+- **IDE**: `Android Studio Panda 1 | 2025.3.1 Patch 1`
+- **Versión Flutter**: `3.32.0 (Stable)`
 - **Versión Dart**: `3.8.0`
 - **Versión DevTools**: `2.45.1`
 
