@@ -5,6 +5,7 @@
 - [Características técnicas](#caracteristicas)
 - [Instalación](#instalacion)
 - [Galeria de imagenes](#galeria)
+- [Variables de entorno](#variables-de-entorno)
 
 ---
 
