@@ -20,6 +20,7 @@ que toda la información se almacena en la nube.
 ShareShopping conforma el proyecto final de curso (TFG) del grado superior de desarrollo de 
 aplicaciones multiplataforma (DAM), involucrando en mayor medida al modulo de programación 
 multimedia y dispositivos moviles.
+
 ## FUNCIONALIDADES
 ShareShopping ofrece las siguientes funcionalidades:
 - **Autentificación basica de usuarios** (registro, inicio de sesión, cierre de sesión).
@@ -69,3 +70,34 @@ listas de compras.**
 perfil de usuario:
 
 ![ShareShopping](./assets/shareshopping-images/shareshopping_app_pictures_2.png)
+
+## VARIABLES DE ENTORNO
+Para ejecutar ShareShopping en Android Studio es necesario crear un archivo `env.json` en la raíz
+del proyecto definiendo las variables de entorno necesarias para la conexión con Firebase. 
+El contenido del archivo debe ser el siguiente:
+
+```json
+{
+  "ANDROID_API_KEY": "tu_android_api_key",
+  "ANDROID_API_ID": "tu_android_api_id",
+  "ANDROID_MESSAGING_SENDER_ID": "tu_android_messaging_sender_id",
+  "ANDROID_PROJECT_ID": "tu_android_project_id",
+  "ANDROID_STORAGE_BUCKET": "tu_android_storage_bucket",
+  "IOS_API_KEY": "tu_ios_api_key",
+  "IOS_API_ID": "tu_ios_api_id",
+  "IOS_MESSAGING_SENDER_ID": "tu_ios_messaging_sender_id",
+  "IOS_PROJECT_ID": "tu_ios_project_id",
+  "IOS_STORAGE_BUCKET": "tu_ios_storage_bucket",
+  "IOS_BUNDLE_ID": "tu_ios_bundle_id"
+}
+```
+
+Asegúrate de reemplazar los valores con las credenciales de tu proyecto de Firebase para Android e iOS.
+
+Para ejecutar el proyecto correctamente asegurate añadir el parametro `--dart-define-from-file=env.json` 
+al ejecutar la aplicación. A continuación un comando para ejecutar el comando desde terminal:
+
+```bash
+flutter run --dart-define-from-file=config.json
+```
+
