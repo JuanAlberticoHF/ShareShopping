@@ -98,6 +98,6 @@ Para ejecutar el proyecto correctamente asegurate añadir el parametro `--dart-d
 al ejecutar la aplicación. A continuación un comando para ejecutar el comando desde terminal:
 
 ```bash
-flutter run --dart-define-from-file=config.json
+flutter run --dart-define-from-file=env.json
 ```
 
